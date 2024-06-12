@@ -2,18 +2,19 @@
 defmodule Board do
   defstruct black_pieces: %{}, red_pieces: %{}, to_move: :nil
   @def_to_move "black"
-  @def_black_pieces (for n <- 1..24//2, into: %{} do
-    j=div(n, 8)
-    { {rem(n + j, 8), j}, "b"}
+  @def_black_pieces (for n <- 1..7//2, j <- 0..2, into: %{} do
+    { {n + rem(j, 2), j + 1}, "b"}
   end)
-  @def_red_pieces   (for {{i, j}, _p} <- @def_black_pieces, into: %{}, do: { {i, j + 6}, "r"} )
+  @def_red_pieces (for n <- 1..7//2, j <- 5..7, into: %{} do
+    { {n + rem(j, 2), j + 1}, "r"}
+  end)
 
   # define functions: red_pieces, and black_pieces
   for fg <- [:red_pieces, :black_pieces] do
-    def unquote(fg)(%__MODULE__{unquote(fg) => pieces}, n) do
+    def unquote(fg)(%__MODULE__{unquote(fg) => pieces}, n = {_x, _y}) do
       case pieces do
-        %{^n => b} -> {:ok, b}
-        _ -> {:nil, :nil}
+        %{^n => b} -> b
+        _ -> :nil
       end
     end
   end
@@ -24,23 +25,26 @@ defmodule Board do
 
   def new(), do: new(black_pieces: @def_black_pieces, red_pieces: @def_red_pieces, to_move: @def_to_move)
 
-  def get_piece(%Board{red_pieces: red, black_pieces: black}, n) do
-    {n, black, red}
+  def get_piece(_board, {x, y})
+    when x not in 1..8 or y not in 1..8, do: :nil
+  def get_piece(board = %Board{}, n) do
+    r = red_pieces(board, n)
+    b = black_pieces(board, n)
+    cond do
+      r != :nil -> r
+      b != :nil -> b
+      true -> "-"
+    end
   end
+
 end
 
 
 defimpl String.Chars, for: Board do
-  def to_string(%Board{black_pieces: _black_pieces, red_pieces: _red_pieces}) do
-    ""
-    #(for n <- 1..64, into: %{}, do: {n, "-"})
-    #|> Map.merge(black_pieces)
-    #|> Map.merge(red_pieces)
-    #|> Map.to_list()
-    #|> Enum.sort_by(&(elem(&1, 0)))
-    #|> Enum.reduce("", fn {x, y}, acc ->
-    #  acc <> y <> ( if rem(x, 8) == 0, do: "\n", else: "" )
-    #end)
+  def to_string(board = %Board{}) do
+    Enum.reduce((for x <- 1..8, y <- 1..8, do: {x, y}), "", fn {x, y}, acc ->
+      acc <> Board.get_piece(board, {y, x}) <> if rem(y, 8) == 0, do: "\n", else: ""
+    end)
   end
 end
 

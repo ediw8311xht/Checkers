@@ -10,15 +10,14 @@ defmodule BoardTest do
   end
 
   test "String.Chars.to_string(Board)" do
-    a = Board.new()
-    IO.puts(a)
-    #assert String.Chars.to_string(a)
+    Board.new()
+    |> to_string()
+    |> assert
   end
 
   test "Board.red_pieces, Board.black_pieces" do
     IO.puts("HI")
     a = Board.new()
-    |> IO.inspect()
   end
 
 end
