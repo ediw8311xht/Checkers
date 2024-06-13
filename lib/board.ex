@@ -2,11 +2,13 @@
 defmodule Board do
   defstruct black_pieces: %{}, red_pieces: %{}, to_move: :nil
   @def_to_move "black"
-  @def_black_pieces (for n <- 1..7//2, j <- 0..2, into: %{} do
-    { {n + rem(j, 2), j + 1}, "b"}
+  @def_black_pieces (for y <- 1..3, x <- 1..7//2, into: %{} do
+    l = if y == 2, do: 1, else: 0
+    { {x + l, y}, "b"}
   end)
-  @def_red_pieces (for n <- 1..7//2, j <- 5..7, into: %{} do
-    { {n + rem(j, 2), j + 1}, "r"}
+  @def_red_pieces (for y <- 6..8, x <- 1..7//2, into: %{} do
+    l = if y == 7, do: 1, else: 0
+    { {x + l, y}, "r"}
   end)
 
   # define functions: red_pieces, and black_pieces
@@ -37,13 +39,20 @@ defmodule Board do
     end
   end
 
+  def full_board(%Board{red_pieces: red_pieces, black_pieces: black_pieces}) do
+    (for y <- 1..8, x <- 1..8, into: %{}, do: {{x, y}, "-"})
+    |> Map.merge(red_pieces)
+    |> Map.merge(black_pieces)
+    |> Helper.rec_build()
+  end
+
 end
 
 
 defimpl String.Chars, for: Board do
   def to_string(board = %Board{}) do
-    Enum.reduce((for x <- 1..8, y <- 1..8, do: {x, y}), "", fn {x, y}, acc ->
-      acc <> Board.get_piece(board, {y, x}) <> if rem(y, 8) == 0, do: "\n", else: ""
+    Enum.reduce((for y <- 8..1, x <- 1..8, do: {x, y}), "", fn {x, y}, acc ->
+      acc <> Board.get_piece(board, {x, y}) <> if rem(x, 8) == 0, do: "\n", else: ""
     end)
   end
 end

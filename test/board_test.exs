@@ -5,6 +5,10 @@ defmodule BoardTest do
 
   test "Board.new()" do
     a = Board.new()
+    IO.inspect(a.red_pieces)
+    IO.puts(a)
+    #Board.full_board(a)
+    #|> IO.inspect()
     #assert a.black_pieces == (  for n <-  1..23//2, into: %{}, do: {n, "b"}   )
     #assert a.red_pieces   == (  for n <- 41..63//2, into: %{}, do: {n, "r"}   )
   end

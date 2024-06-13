@@ -15,4 +15,27 @@ defmodule Helper do
     end)
   end
 
+  def rec_build_x(klist) do
+    klist
+    |> Enum.sort()
+    |> Enum.reduce("", fn {{_x, _y}, s}, acc -> acc <> s end)
+  end
+
+  def rec_build_y(klist, sy \\ 1, by \\ 1) do
+    case Enum.filter(klist, fn {{_x, y}, _s} -> y == sy end) do
+      [] -> []
+      l -> [rec_build_x(l)] ++ rec_build_y(klist, sy + by)
+    end
+  end
+
+  def rec_build(map = %{}, flip: true) do
+    rec_build_y(map)
+    |> Enum.join("\n")
+  end
+
+  def rec_build(map = %{}) do
+    rec_build_y(map)
+    |> :lists.reverse()
+    |> Enum.join("\n")
+  end
 end
