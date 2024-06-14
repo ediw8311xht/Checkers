@@ -1,3 +1,5 @@
+/.elixir-tools/
+
 # The directory Mix will write compiled artifacts to.
 /_build/
 
@@ -24,3 +26,4 @@ checkers-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
