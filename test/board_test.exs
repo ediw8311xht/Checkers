@@ -8,7 +8,7 @@ defmodule BoardTest do
     |> assert
   end
 
-  test "String.Chars.to_string(Board)" do
+  test "String.Chars.to_string(%Board{})" do
     Board.new()
     |> to_string()
     |> assert
@@ -22,10 +22,13 @@ defmodule BoardTest do
     |> assert
   end
 
-  test "Board.get_moves" do
-    moves = Board.new()
-            |> Board.get_moves({1, 1})
-    assert moves == []
+  test "Board.validate_move" do
+    a = Board.new()
+    b = Board.validate_move(a, {1, 1}, {2, 2})
+    IO.inspect(b)
+    #assert Board.get_moves(a, {1, 1}) == []
+    #Board.get_moves(a, {3, 3})
+    #|> IO.inspect()
   end
 
 
