@@ -22,16 +22,11 @@ defmodule BoardTest do
     |> assert
   end
 
-  test "Board.move" do
-    Board.new()
-    |> Board.move({1, 1}, {2, 2})
-    |> IO.inspect()
+  test "Board.get_moves" do
+    moves = Board.new()
+            |> Board.get_moves({1, 1})
+    assert moves == []
   end
 
-  test "macro" do
-    require Helper
-    Helper.is_int_l([3, 4, 5])
-    |> IO.puts()
-  end
 
 end

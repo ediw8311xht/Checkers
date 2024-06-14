@@ -1,0 +1,334 @@
+
+11:03:00.958 [info] Loading 147 CA(s) from :otp store
+
+11:03:01.075 id=1 [debug] handled request client -> server initialize in 79ms
+
+11:03:01.080 [debug] sent notification server -> client window/logMessage
+
+11:03:01.083 [debug] NextLS v0.23.0 has initialized!
+
+11:03:01.083 [debug] sent notification server -> client window/logMessage
+
+11:03:01.083 [debug] Log file located at /home/maceurt/Desktop/Coding/ELIXIR/checkers/lib/.elixir-tools/next-ls.log
+
+11:03:01.085 [debug] sent notification server -> client window/logMessage
+
+11:03:01.085 [info] [extension] Credo initializing with options %NextLS.InitOpts.Extensions.Credo{enable: true, cli_options: []}
+
+11:03:03.700 [debug] sent notification server -> client window/logMessage
+
+11:03:03.700 [debug] Booting runtimes...
+
+11:03:03.704 id=1638 [debug] sent request server -> client window/workDoneProgress/create
+
+11:03:03.707 [debug] sent notification server -> client $/progress
+
+11:03:03.716 [debug] sent notification server -> client window/logMessage
+
+11:03:03.716 [info] Beginning DB migration...
+
+11:03:03.721 [debug] sent notification server -> client window/logMessage
+
+11:03:03.721 [info] Database is on the latest version: 7
+
+11:03:03.721 [debug] sent notification server -> client window/logMessage
+
+11:03:03.721 [info] Finished DB migration...
+
+11:03:03.721 [debug] sent notification server -> client window/logMessage
+
+11:03:03.721 [info] Booting runtime for checkers.
+
+- elixir: /home/maceurt/.cache/elixir-tools/nextls/elixir/1-17-1/bin/elixir
+- zombie wrapper script: /home/maceurt/.local/share/.burrito/next_ls_erts-15.0_0.23.0/lib/next_ls-0.23.0/priv/cmd
+- working_dir: /home/maceurt/Desktop/Coding/ELIXIR/checkers
+- command: /home/maceurt/.cache/elixir-tools/nextls/elixir/1-17-1/bin/elixir --no-halt --sname nextls-runtime-1718377383721203030 --cookie 2KC276ZUK5V7TYKJDNJV7GVZ2R6NXLUDXNRHH7OOXGQGG5WM5CKA==== -S mix loadpaths --no-compile
+
+Environment: 
+
+LSP=nextls
+NEXTLS_PARENT_PID=g1h3IG5leHQtbHMtMTcxODM3NzM4MDk2NTgwNzQ3N0BwYy1tAAAA4wAAAABmbFul
+MIX_ENV=dev
+MIX_TARGET=host
+MIX_BUILD_ROOT=.elixir-tools/_build
+ROOTDIR=false
+BINDIR=false
+RELEASE_ROOT=false
+RELEASE_SYS_CONFIG=false
+PATH=/home/maceurt/.cache/elixir-tools/nextls/elixir/1-17-1/bin:/home/maceurt/.local/share/.burrito/next_ls_erts-15.0_0.23.0/bin:/usr/bin:/etc/systemd/user:/home/maceurt/.local/share/applications:/home/maceurt/.local/bin/FreeTube:/home/maceurt/.config/emacs/bin/:/home/maceurt/bin/:/home/maceurt/.local/bin:/sbin:/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
+MIX_HOME=/home/maceurt/.cache/elixir-tools/nextls/elixir/1-17-1/.mix
+MIX_ARCHIVES=/home/maceurt/.cache/elixir-tools/nextls/elixir/1-17-1/.mix/archives
+
+
+11:03:03.722 [debug] handled notification client -> server initialized in 2644ms
+
+11:03:03.726 [debug] handled notification client -> server textDocument/didOpen in 4ms
+
+11:03:03.747 id=2 [debug] handled request client -> server textDocument/documentSymbol in 20ms
+
+11:03:03.770 id=3 [debug] handled request client -> server textDocument/codeAction in 22ms
+
+11:03:03.775 [debug] handled notification client -> server textDocument/didChange in 5ms
+
+11:03:03.776 id=4 [debug] handled request client -> server textDocument/codeAction in 400µs
+
+11:03:03.776 id=5 [debug] handled request client -> server textDocument/codeAction in 363µs
+
+11:03:03.777 id=6 [debug] handled request client -> server textDocument/documentSymbol in 549µs
+
+11:03:03.801 [debug] handled notification client -> server textDocument/didChange in 236µs
+
+11:03:04.175 [debug] handled notification client -> server textDocument/didChange in 246µs
+
+11:03:04.197 [debug] sent notification server -> client window/logMessage
+
+11:03:04.197 [warning] Failed to run completion request: ** (MatchError) no match of right hand side value: {:error, :not_ready}
+    (next_ls 0.23.0) lib/next_ls.ex:633: anonymous fn/5 in NextLS.handle_request/2
+    (next_ls 0.23.0) lib/next_ls.ex:1357: anonymous fn/4 in NextLS.dispatch_to_workspace/3
+    (elixir 1.17.0) lib/enum.ex:2531: Enum."-reduce/3-lists^foldl/2-0-"/3
+    (next_ls 0.23.0) lib/next_ls.ex:1356: anonymous fn/5 in NextLS.dispatch_to_workspace/3
+    (elixir 1.17.0) lib/registry.ex:488: Registry.dispatch/4
+    (next_ls 0.23.0) lib/next_ls.ex:1354: NextLS.dispatch_to_workspace/3
+    (next_ls 0.23.0) lib/next_ls.ex:632: NextLS.handle_request/2
+    (gen_lsp 0.10.0) lib/gen_lsp.ex:350: anonymous fn/2 in GenLSP.loop/3
+
+
+11:03:04.202 id=7 [debug] handled request client -> server textDocument/completion in 24ms
+
+11:03:04.679 id=8 [debug] handled request client -> server textDocument/documentSymbol in 459µs
+
+11:03:04.907 [debug] sent notification server -> client window/logMessage
+
+11:03:04.907 [info] Connected to node nextls-runtime-1718377383721203030@pc-m
+
+11:03:05.145 [debug] handled notification client -> server textDocument/didChange in 175µs
+
+11:03:05.322 [debug] handled notification client -> server textDocument/didChange in 156µs
+
+11:03:05.430 [debug] sent notification server -> client $/progress
+
+11:03:05.432 [debug] sent notification server -> client window/logMessage
+
+11:03:05.432 [debug] Runtime for folder checkers is ready...
+
+11:03:05.434 id=1830 [debug] sent request server -> client window/workDoneProgress/create
+
+11:03:05.434 [debug] sent notification server -> client $/progress
+
+11:03:05.472 [debug] handled notification client -> server textDocument/didChange in 223µs
+
+11:03:05.517 [debug] sent notification server -> client window/logMessage
+
+11:03:05.518 [info] Compiling 1 file (.ex)
+
+
+11:03:05.552 [debug] sent notification server -> client window/logMessage
+
+11:03:05.553 [info]     warning: variable "to_move" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 71 │   def validate_slope(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                                              ~~~~~~~
+    │
+    └─ lib/board.ex:71:46: Board.validate_slope/3
+
+
+
+11:03:05.553 [debug] sent notification server -> client window/logMessage
+
+11:03:05.553 [info]     warning: variable "board" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 75 │   def validate_pieces(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                       ~~~~~
+    │
+    └─ lib/board.ex:75:23: Board.validate_pieces/3
+
+
+
+11:03:05.554 [debug] sent notification server -> client window/logMessage
+
+11:03:05.554 [info]     warning: variable "pos" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 75 │   def validate_pieces(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                                                         ~~~
+    │
+    └─ lib/board.ex:75:57: Board.validate_pieces/3
+
+
+
+11:03:05.554 [debug] sent notification server -> client window/logMessage
+
+11:03:05.555 [info]     warning: variable "pos2" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 75 │   def validate_pieces(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                                                                         ~~~~
+    │
+    └─ lib/board.ex:75:73: Board.validate_pieces/3
+
+
+
+11:03:05.555 [debug] sent notification server -> client window/logMessage
+
+11:03:05.555 [info]     warning: variable "to_move" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 75 │   def validate_pieces(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                                               ~~~~~~~
+    │
+    └─ lib/board.ex:75:47: Board.validate_pieces/3
+
+
+
+11:03:05.556 [debug] sent notification server -> client window/logMessage
+
+11:03:05.556 [info]     warning: variable "pos" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 84 │   def internal_move(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                                                       ~~~
+    │
+    └─ lib/board.ex:84:55: Board.internal_move/3
+
+
+
+11:03:05.557 [debug] sent notification server -> client window/logMessage
+
+11:03:05.557 [info]     warning: variable "pos2" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 84 │   def internal_move(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                                                                       ~~~~
+    │
+    └─ lib/board.ex:84:71: Board.internal_move/3
+
+
+
+11:03:05.559 [debug] sent notification server -> client window/logMessage
+
+11:03:05.559 [info] Generated checkers app
+
+
+11:03:05.564 [debug] sent notification server -> client $/progress
+
+11:03:05.564 [debug] sent notification server -> client window/logMessage
+
+11:03:05.564 [info] Compiled checkers!
+
+11:03:05.564 [debug] sent notification server -> client textDocument/publishDiagnostics
+
+11:03:05.566 [debug] sent notification server -> client textDocument/publishDiagnostics
+
+11:03:05.621 [debug] handled notification client -> server textDocument/didChange in 267µs
+
+11:03:05.802 [debug] handled notification client -> server textDocument/didChange in 579µs
+
+11:03:05.952 [debug] handled notification client -> server textDocument/didChange in 297µs
+
+11:03:06.101 [debug] handled notification client -> server textDocument/didChange in 372µs
+
+11:03:06.250 [debug] handled notification client -> server textDocument/didChange in 322µs
+
+11:03:06.369 id=9 [debug] handled request client -> server textDocument/codeAction in 455µs
+
+11:03:06.642 id=67 [debug] sent request server -> client window/workDoneProgress/create
+
+11:03:06.642 [debug] handled notification client -> server textDocument/didSave in 3ms
+
+11:03:06.643 [debug] sent notification server -> client $/progress
+
+11:03:06.650 [debug] sent notification server -> client window/logMessage
+
+11:03:06.650 [info] Compiling 1 file (.ex)
+
+
+11:03:06.659 [debug] sent notification server -> client window/logMessage
+
+11:03:06.659 [info]     warning: variable "to_move" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 71 │   def validate_slope(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                                              ~~~~~~~
+    │
+    └─ (checkers 0.1.0) lib/board.ex:71:46: Board.validate_slope/3
+
+
+
+11:03:06.660 [debug] sent notification server -> client window/logMessage
+
+11:03:06.660 [info]     warning: variable "board" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 75 │   def validate_pieces(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                       ~~~~~
+    │
+    └─ (checkers 0.1.0) lib/board.ex:75:23: Board.validate_pieces/3
+
+
+
+11:03:06.661 [debug] sent notification server -> client window/logMessage
+
+11:03:06.662 [info]     warning: variable "pos" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 75 │   def validate_pieces(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                                                         ~~~
+    │
+    └─ (checkers 0.1.0) lib/board.ex:75:57: Board.validate_pieces/3
+
+
+
+11:03:06.662 [debug] sent notification server -> client window/logMessage
+
+11:03:06.662 [info]     warning: variable "pos2" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 75 │   def validate_pieces(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                                                                         ~~~~
+    │
+    └─ (checkers 0.1.0) lib/board.ex:75:73: Board.validate_pieces/3
+
+
+
+11:03:06.663 [debug] sent notification server -> client window/logMessage
+
+11:03:06.663 [info]     warning: variable "to_move" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 75 │   def validate_pieces(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                                               ~~~~~~~
+    │
+    └─ (checkers 0.1.0) lib/board.ex:75:47: Board.validate_pieces/3
+
+
+
+11:03:06.663 [debug] sent notification server -> client window/logMessage
+
+11:03:06.663 [info]     warning: variable "pos" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 84 │   def internal_move(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                                                       ~~~
+    │
+    └─ (checkers 0.1.0) lib/board.ex:84:55: Board.internal_move/3
+
+
+
+11:03:06.664 [debug] sent notification server -> client window/logMessage
+
+11:03:06.664 [info]     warning: variable "pos2" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 84 │   def internal_move(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    │                                                                       ~~~~
+    │
+    └─ (checkers 0.1.0) lib/board.ex:84:71: Board.internal_move/3
+
+
+
+11:03:06.665 [debug] sent notification server -> client window/logMessage
+
+11:03:06.665 [info] Generated checkers app
+
+
+11:03:06.668 [debug] sent notification server -> client $/progress
+
+11:03:06.668 [debug] sent notification server -> client window/logMessage
+
+11:03:06.669 [info] Compiled checkers!
+
+11:03:06.670 [debug] sent notification server -> client textDocument/publishDiagnostics
+
+11:03:06.670 [debug] sent notification server -> client textDocument/publishDiagnostics
+
+11:03:06.750 id=10 [debug] handled request client -> server textDocument/documentSymbol in 698µs
+
+11:03:13.351 id=11 [debug] handled request client -> server shutdown in 4ms

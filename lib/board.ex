@@ -1,6 +1,14 @@
 
 defmodule Board do
   defstruct black_pieces: %{}, red_pieces: %{}, to_move: :nil
+
+  @piece_direction %{
+    "r" => [{1, -1}, {-1, -1}],
+    "R" => [{1, -1}, {-1, -1}, {-1, 1}, {1, 1}],
+    "b" => [{1,  1}, {-1,  1}],
+    "B" => [{1, -1}, {-1, -1}, {-1, 1}, {1, 1}],
+  }
+
   @def_to_move "black"
 
   @def_black_pieces (for y <- 1..3, x <- 1..7//2, into: %{} do
@@ -11,10 +19,10 @@ defmodule Board do
     { {x + (if y == 7, do: 1, else: 0), y}, "r"}
   end)
 
-  @validators [
-    &__MODULE__.validate_pieces/3, 
-    &__MODULE__.validate_slope/3,
-  ]
+  #@validators [
+  #  &__MODULE__.validate_pieces/3,
+  #  &__MODULE__.validate_slope/3,
+  #]
 
 
 
@@ -33,15 +41,12 @@ defmodule Board do
   end
   def new(), do: new(black_pieces: @def_black_pieces, red_pieces: @def_red_pieces, to_move: @def_to_move)
 
-  def get_piece(_board, {x, y})
-    when x not in 1..8 or y not in 1..8, do: :nil
-  def get_piece(board = %Board{}, n) do
-    r = red_pieces(board, n)
-    b = black_pieces(board, n)
-    cond do
-      r != :nil -> r
-      b != :nil -> b
-      true -> "-"
+  def get_piece(_board, {x, y}) when x not in 1..8 or y not in 1..8, do: :nil
+  def get_piece(board = %Board{}, pos = {_x, _y}, color \\ false) do
+    case {red_pieces(board, pos), black_pieces(board, pos)} do
+      {:nil, :nil} -> if color, do: {"-", :empty }, else: "-"
+      {r, :nil}    -> if color, do: {r,   :red   }, else: r
+      {:nil, b}    -> if color, do: {b,   :black }, else: b
     end
   end
 
@@ -54,44 +59,76 @@ defmodule Board do
     |> Helper.rec_build(flip: flip)
   end
 
-  def piece_direction(board = %Board{}, pos = {_x, _y}) do
-    case get_piece(board, pos) do
-      "B" -> [1, -1]
-      "R" -> [1, -1]
-      "r" -> [-1]
-      "b" -> [ 1]
-      _   -> []
+
+
+  def get_moves(board = %Board{}, pos = {_x, _y}) do
+    piece = get_piece(board, pos)
+    @piece_direction[piece]
+    |> Enum.map(fn np -> Helper.add_pos(pos, np) end)
+    |> Enum.filter(fn np -> get_piece(board, np) == "-" end)
+  end
+
+  def valid_capture(board = %Board{}, pos = {x, y}, dir = {x2, y2}) do
+    added = get_piece(board, Helper.add_pos(pos, dir))
+    if added == "-" do
+      added2 = Helper.add_pos(added, dir)
     end
   end
 
-  #------------------VALIDATORS-------------------#
-  def validate_slope(%Board{}, {x, y}, {x2, y2})
-    when not (is_integer(x) and is_integer(y) and is_integer(x2) and is_integer(y2)), do: false
-
-  def validate_slope(%Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
-    Helper.slope(pos, pos2) in piece_direction(board, pos)
+  def capture(board = %Board{}, pos = {x, y}, dir = {x2, y2}) do
+    piece = get_piece(board, pos)
+    @piece_direction[piece]
   end
 
-  def validate_pieces(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
-    true
-  end
-  #-----------------------------------------------#
-
-  def validate_move(board = %Board{}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
-    Enum.all?(@validators, fn func -> func.(board, pos, pos2) end)
+  def get_captures(board = %Board{}, pos = {x, y}) do
+    piece = get_piece(board, pos)
+    @piece_direction[piece]
+    |> Enum.map(fn np -> Helper.add_pos(pos, np) end)
+    |> Enum.map(fn np -> String.get_piece(board, np) == "-" end)
   end
 
-  def internal_move(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
-    board = %Board{board | to_move: (if to_move == :black, do: :red, else: :black)}
-    board
+  def get_valid_moves(board = %Board{}, pos = {_x, _y}) do
+    get_captures(board, pos) ++ get_moves(board, pos)
   end
 
-  def move(board = %Board{}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
-    case validate_move(board, pos, pos2) do
-      true  -> internal_move(board, pos, pos2)
-      false -> false
-    end
-  end
+  #def piece_direction(board = %Board{}, pos = {_x, _y}) do
+  #  case get_piece(board, pos) do
+  #    "B" -> [1, -1]
+  #    "R" -> [1, -1]
+  #    "r" -> [-1]
+  #    "b" -> [ 1]
+  #    _   -> []
+  #  end
+  #end
+
+  ##------------------VALIDATORS-------------------#
+  #def validate_slope(%Board{}, {x, y}, {x2, y2})
+  #  when not (is_integer(x) and is_integer(y) and is_integer(x2) and is_integer(y2)), do: false
+
+  #def validate_slope(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+  #  Helper.slope(pos, pos2) in piece_direction(board, pos)
+  #end
+
+  #def validate_pieces(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+  #  true
+  #end
+  ##-----------------------------------------------#
+
+  #def validate_move(board = %Board{}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+  #  Enum.all?(@validators, fn func -> func.(board, pos, pos2) end)
+  #end
+
+  #def internal_move(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+  #  board = %Board{board | to_move: (if to_move == :black, do: :red, else: :black)}
+  #  board
+  #end
+
+  #def move(board = %Board{}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+  #  case validate_move(board, pos, pos2) do
+  #    true  -> internal_move(board, pos, pos2)
+  #    false -> false
+  #  end
+  #end
 end
 
 
