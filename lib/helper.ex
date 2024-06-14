@@ -14,12 +14,14 @@ defmodule Helper do
     end
   end
 
+  def rec_build(map = %{}), do: rec_build(map, flip: false)
+
   def rec_build(map = %{}, flip: true) do
     rec_build_y(map)
     |> Enum.join("\n")
   end
 
-  def rec_build(map = %{}) do
+  def rec_build(map = %{}, flip: false) do
     rec_build_y(map)
     |> :lists.reverse()
     |> Enum.join("\n")

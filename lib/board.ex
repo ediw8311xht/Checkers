@@ -39,11 +39,13 @@ defmodule Board do
     end
   end
 
-  def full_board(%Board{red_pieces: red_pieces, black_pieces: black_pieces}) do
+  def full_board(b = %Board{}), do: full_board(b, flip: false)
+
+  def full_board(%Board{red_pieces: red_pieces, black_pieces: black_pieces}, flip: flip) do
     (for y <- 1..8, x <- 1..8, into: %{}, do: {{x, y}, "-"})
     |> Map.merge(red_pieces)
     |> Map.merge(black_pieces)
-    |> Helper.rec_build()
+    |> Helper.rec_build(flip: flip)
   end
 
 end
@@ -51,9 +53,11 @@ end
 
 defimpl String.Chars, for: Board do
   def to_string(board = %Board{}) do
-    Enum.reduce((for y <- 8..1, x <- 1..8, do: {x, y}), "", fn {x, y}, acc ->
-      acc <> Board.get_piece(board, {x, y}) <> if rem(x, 8) == 0, do: "\n", else: ""
-    end)
+    Board.full_board(board)
+  end
+
+  def to_string(board = %Board{}) do
+    Board.full_board(board)
   end
 end
 
