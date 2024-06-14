@@ -4,13 +4,8 @@ defmodule BoardTest do
   doctest Board
 
   test "Board.new()" do
-    a = Board.new()
-    IO.inspect(a.red_pieces)
-    IO.puts(a)
-    #Board.full_board(a)
-    #|> IO.inspect()
-    #assert a.black_pieces == (  for n <-  1..23//2, into: %{}, do: {n, "b"}   )
-    #assert a.red_pieces   == (  for n <- 41..63//2, into: %{}, do: {n, "r"}   )
+    Board.new()
+    |> assert
   end
 
   test "String.Chars.to_string(Board)" do
@@ -20,8 +15,23 @@ defmodule BoardTest do
   end
 
   test "Board.red_pieces, Board.black_pieces" do
-    IO.puts("HI")
     a = Board.new()
+    a.black_pieces
+    |> assert
+    a.red_pieces
+    |> assert
+  end
+
+  test "Board.move" do
+    Board.new()
+    |> Board.move({1, 1}, {2, 2})
+    |> IO.inspect()
+  end
+
+  test "macro" do
+    require Helper
+    Helper.is_int_l([3, 4, 5])
+    |> IO.puts()
   end
 
 end

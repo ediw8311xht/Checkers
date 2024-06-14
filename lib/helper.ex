@@ -26,4 +26,9 @@ defmodule Helper do
     |> :lists.reverse()
     |> Enum.join("\n")
   end
+
+  def slope({x, y}, {x2, y2}) do
+    (x2 - x) / (y2 - y)
+  end
+
 end
