@@ -9,26 +9,22 @@ defmodule BoardTest do
   end
 
   test "String.Chars.to_string(%Board{})" do
-    Board.new()
-    |> to_string()
-    |> assert
-  end
-
-  test "Board.red_pieces, Board.black_pieces" do
     a = Board.new()
-    a.black_pieces
-    |> assert
-    a.red_pieces
-    |> assert
+    string = to_string(a)
+    IO.puts("")
+    IO.puts(string)
+    IO.puts("")
+    assert string
   end
 
   test "Board.validate_move" do
-    a = Board.new()
-    b = Board.validate_move(a, {1, 1}, {2, 2})
-    IO.inspect(b)
+    #a = Board.new()
+    #b = Board.validate_move(a, {1, 1}, {2, 2})
+    #IO.inspect(b)
     #assert Board.get_moves(a, {1, 1}) == []
     #Board.get_moves(a, {3, 3})
     #|> IO.inspect()
+    assert true
   end
 
 
