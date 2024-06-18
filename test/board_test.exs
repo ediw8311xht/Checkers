@@ -11,9 +11,6 @@ defmodule BoardTest do
   test "String.Chars.to_string(%Board{})" do
     a = Board.new()
     string = to_string(a)
-    IO.puts("")
-    IO.puts(string)
-    IO.puts("")
     assert string
   end
 
