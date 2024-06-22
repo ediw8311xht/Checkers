@@ -17,20 +17,27 @@ defmodule Board do
     end
   )
 
-  #------------------BASIC-------------------#
+  #------------------PUBLIC------------------#
   def new(), do: new(pieces: @default_pieces, to_move: @default_to_move)
   def new(pieces: pieces, to_move: to_move), do: %Board{pieces: pieces, to_move: to_move}
 
+  #------------------UTILITY-----------------#
   defp update_to_move( board = %Board{ to_move: :black } ), do: %Board{ board | to_move: :red   }
   defp update_to_move( board = %Board{ to_move: :red   } ), do: %Board{ board | to_move: :black }
 
-  def get_piece(%Board{pieces: pieces}, pos = {_x, _y}), do: pieces[pos]
+  defp get_pieces(%Board{pieces: pieces}, pos: pos = {_x, _y}), do: pieces[pos]
+  for i <- [:red, :black] do
+    defp get_pieces(%Board{pieces: pieces}, color: unquote(i)) do
+      Enum.filter(pieces, fn {_pos, %Piece{color: color}} -> color == unquote(i) end)
+    end
+  end
 
   defp update_pieces(board = %Board{pieces: pieces}, new_pieces = %{}) do
     %Board{ board | pieces: Map.merge(pieces, new_pieces) }
   end
 
   #------------------VALIDATION--------------#
+  defp validate_color(%Board{to_move: to_move}, %Piece{color: color}), do: to_move == color
 
 
   #------------------STRING------------------#
