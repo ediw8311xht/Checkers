@@ -1,12 +1,19 @@
 
-defmodule BoardTest do
+defmodule PieceTest do
   use ExUnit.Case
-  doctest Board
+  doctest Piece
 
-  test "Board.new()" do
-    a = Board.new()
-    #a.pieces
-    #|> IO.inspect()
+  test "Piece.new()" do
+    for color <- [:red, :black] do
+      for type <- [:normal, :king] do
+        assert Piece.new(color: color, type: type) == %Piece{color: color, type: type}
+      end
+    end
+  end
+
+  test "Pieces.valid_dir/2" do
+    Piece.__info__(:functions)
+    |> IO.inspect()
   end
 
   #test "String.Chars.to_string(%Board{})" do
