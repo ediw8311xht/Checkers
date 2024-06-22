@@ -4,42 +4,27 @@ defmodule Board do
 
   defstruct pieces: %{}, to_move: :nil
 
-  defguard in_board(x, y) when x in 1..8 and y in 1..8
-  @piece_string %{
-    { :red,   :normal }  => "r",
-    { :black, :normal }  => "b",
-    { :red,   :king   }  => "R",
-    { :black, :king   }  => "B",
-    { :empty, :empty  }  => "-",
-  }
-  @move_dir %{
-    { :red,   :normal }  => [-1],
-    { :black, :normal }  => [1],
-    { :red,   :king   }  => [1, -1],
-    { :black, :king   }  => [1, -1],
-  }
-
-  @def_pieces %{}
+  @default_red   [{2, 6}, {4, 6}, {6, 6}, {8, 6}, {1, 7}, {3, 7}, {5, 7}, {7, 7}, {2, 8}, {4, 8}, {6, 8}, {8, 8}]
+  @default_black [{1, 1}, {3, 1}, {5, 1}, {7, 1}, {2, 2}, {4, 2}, {6, 2}, {8, 2}, {1, 3}, {3, 3}, {5, 3}, {7, 3}]
+  @default_to_move  :black
+  @default_pieces (
+    for y <- 1..8, x <- 1..8, into: %{} do
+      cond do
+        {x, y} in @default_red   -> {{x, y}, Piece.new(color: :red  , type: :normal)}
+        {x, y} in @default_black -> {{x, y}, Piece.new(color: :black, type: :normal)}
+        true                     -> {{x, y}, Piece.new(color: :empty, type: :empty)}
+      end
+    end
+  )
 
 
-  def new(), do: new(pieces: @def_pieces, to_move: @def_to_move)
+  def new(), do: new(pieces: @default_pieces, to_move: @default_to_move)
   def new(pieces: pieces, to_move: to_move), do: %Board{pieces: pieces, to_move: to_move}
 
-  def string(board = %Board{}), do: string(board, flip: false)
-  def string(board = %Board{}, flip: flip) do
-    (if flip, do: 1..8, else: 8..1)
-    |> Enum.reduce("", fn y, whole ->
-      whole
-      <> Enum.reduce(1..8, "", fn x, row -> row <> Board.get_piece(board, {x, y}, string: true) end)
-      <> "\n"
+  def string(%Board{pieces: pieces}) do
+    Enum.reduce((for y <- 1..8, x <- 1..8, do: {x, y}), "", fn pos, acc ->
+      (pieces[pos] |> Piece.string()) <> acc
     end)
-  end
-end
-
-
-defimpl String.Chars, for: Board do
-  def to_string(board = %Board{}) do
-    Board.string(board)
   end
 end
 

@@ -5,8 +5,12 @@ defmodule BoardTest do
 
   test "Board.new()" do
     a = Board.new()
-    #a.pieces
-    #|> IO.inspect()
+    assert a
+  end
+
+  test "defimpl String.Chars.to_string -> Board" do
+    a = Board.new()
+    assert to_string(a)
   end
 
   #test "String.Chars.to_string(%Board{})" do

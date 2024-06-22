@@ -1,15 +1,15 @@
+
 defmodule Piece do
   defstruct color: :empty, type: :empty
-  @valid_colors [:red,    :black]
-  @valid_types  [:normal, :king]
-  @move_dir %{
-    { :red,   :normal }  => [-1],
-    { :black, :normal }  => [1],
-    { :red,   :king   }  => [1, -1],
-    { :black, :king   }  => [1, -1],
-  }
+  @empty        {:empty, :empty}
+  @valid_pieces [ {:black,:normal}, {:red,:normal}, {:black,:king}, {:red,:king}, {:empty, :empty} ]
+  @move_dir     Enum.zip( @valid_pieces, [ [1], [-1], [1,-1], [1,-1], [] ] )
 
-  def new(color: color, type: type) when color in @valid_colors and type in @valid_types do
+  for {{color, type}, x} <- Enum.zip( @valid_pieces, ["o", "x", "O", "X", "-"] ) do
+    def string(%Piece{color: unquote(color), type: unquote(type)}), do: unquote(x)
+  end
+
+  def new(color: color, type: type) when {color, type} in @valid_pieces do
     %Piece{type: type, color: color}
   end
 
@@ -19,7 +19,7 @@ defmodule Piece do
     for y <- y_values do
       for x <- [1, -1] do
         def valid_dir(%Piece{color: unquote(color), type: unquote(type)}, {unquote(x), unquote(y)}), do: true
-        def valid_dir(%Piece{color: unquote(color), type: unquote(type)}, {unquote(x * 3), unquote(y * 3)}, :capture), do: true
+        def valid_dir(%Piece{color: unquote(color), type: unquote(type)}, {unquote(x * 2), unquote(y * 2)}, :capture), do: true
       end
     end
   end

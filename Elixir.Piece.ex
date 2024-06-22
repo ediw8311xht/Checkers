@@ -1,54 +1,70 @@
 defmodule Piece do
-  def valid_dir(%Piece{color: :black, type: :king}, {3, 3}, :capture) do
+  def valid_dir(%Piece{color: :black, type: :normal}, {2, 2}, :capture) do
     true
   end
 
-  def valid_dir(%Piece{color: :black, type: :king}, {-3, 3}, :capture) do
+  def valid_dir(%Piece{color: :black, type: :normal}, {-2, 2}, :capture) do
     true
   end
 
-  def valid_dir(%Piece{color: :black, type: :king}, {3, -3}, :capture) do
+  def valid_dir(%Piece{color: :red, type: :normal}, {2, -2}, :capture) do
     true
   end
 
-  def valid_dir(%Piece{color: :black, type: :king}, {-3, -3}, :capture) do
+  def valid_dir(%Piece{color: :red, type: :normal}, {-2, -2}, :capture) do
     true
   end
 
-  def valid_dir(%Piece{color: :black, type: :normal}, {3, 3}, :capture) do
+  def valid_dir(%Piece{color: :black, type: :king}, {2, 2}, :capture) do
     true
   end
 
-  def valid_dir(%Piece{color: :black, type: :normal}, {-3, 3}, :capture) do
+  def valid_dir(%Piece{color: :black, type: :king}, {-2, 2}, :capture) do
     true
   end
 
-  def valid_dir(%Piece{color: :red, type: :king}, {3, 3}, :capture) do
+  def valid_dir(%Piece{color: :black, type: :king}, {2, -2}, :capture) do
     true
   end
 
-  def valid_dir(%Piece{color: :red, type: :king}, {-3, 3}, :capture) do
+  def valid_dir(%Piece{color: :black, type: :king}, {-2, -2}, :capture) do
     true
   end
 
-  def valid_dir(%Piece{color: :red, type: :king}, {3, -3}, :capture) do
+  def valid_dir(%Piece{color: :red, type: :king}, {2, 2}, :capture) do
     true
   end
 
-  def valid_dir(%Piece{color: :red, type: :king}, {-3, -3}, :capture) do
+  def valid_dir(%Piece{color: :red, type: :king}, {-2, 2}, :capture) do
     true
   end
 
-  def valid_dir(%Piece{color: :red, type: :normal}, {3, -3}, :capture) do
+  def valid_dir(%Piece{color: :red, type: :king}, {2, -2}, :capture) do
     true
   end
 
-  def valid_dir(%Piece{color: :red, type: :normal}, {-3, -3}, :capture) do
+  def valid_dir(%Piece{color: :red, type: :king}, {-2, -2}, :capture) do
     true
   end
 
   def valid_dir(%Piece{color: _color, type: _type}, {_dx, _dy}, :capture) do
     false
+  end
+
+  def valid_dir(%Piece{color: :black, type: :normal}, {1, 1}) do
+    true
+  end
+
+  def valid_dir(%Piece{color: :black, type: :normal}, {-1, 1}) do
+    true
+  end
+
+  def valid_dir(%Piece{color: :red, type: :normal}, {1, -1}) do
+    true
+  end
+
+  def valid_dir(%Piece{color: :red, type: :normal}, {-1, -1}) do
+    true
   end
 
   def valid_dir(%Piece{color: :black, type: :king}, {1, 1}) do
@@ -64,14 +80,6 @@ defmodule Piece do
   end
 
   def valid_dir(%Piece{color: :black, type: :king}, {-1, -1}) do
-    true
-  end
-
-  def valid_dir(%Piece{color: :black, type: :normal}, {1, 1}) do
-    true
-  end
-
-  def valid_dir(%Piece{color: :black, type: :normal}, {-1, 1}) do
     true
   end
 
@@ -91,16 +99,24 @@ defmodule Piece do
     true
   end
 
-  def valid_dir(%Piece{color: :red, type: :normal}, {1, -1}) do
-    true
-  end
-
-  def valid_dir(%Piece{color: :red, type: :normal}, {-1, -1}) do
-    true
-  end
-
   def valid_dir(%Piece{color: _color, type: _type}, {_dx, _dy}) do
     false
+  end
+
+  def string(%Piece{color: :black, type: :normal}) do
+    "o"
+  end
+
+  def string(%Piece{color: :red, type: :normal}) do
+    "x"
+  end
+
+  def string(%Piece{color: :black, type: :king}) do
+    "O"
+  end
+
+  def string(%Piece{color: :red, type: :king}) do
+    "X"
   end
 
   def new(color: color, type: type) do
@@ -109,10 +125,6 @@ defmodule Piece do
 
   def king_me(piece = %Piece{}) do
     %{piece | type: :king}
-  end
-
-  def empty(%Piece{type: type}) do
-    :erlang.==(type, :empty)
   end
 
   def __struct__(kv) do
