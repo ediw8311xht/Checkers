@@ -1,11 +1,13 @@
 
 defmodule Piece do
   defstruct color: :empty, type: :empty
-  @empty        {:empty, :empty}
-  @valid_pieces [ {:black,:normal}, {:red,:normal}, {:black,:king}, {:red,:king}, {:empty, :empty} ]
-  @move_dir     Enum.zip( @valid_pieces, [ [1], [-1], [1,-1], [1,-1], [] ] )
 
-  for {{color, type}, x} <- Enum.zip( @valid_pieces, ["o", "x", "O", "X", "-"] ) do
+  @valid_pieces [ {:black,:normal}, {:red,:normal}, {:black,:king}, {:red,:king}, {:empty, :empty} ]
+  @string_repr  [ "o", "x", "O", "X", "-" ]
+  @directions   [ [1], [-1], [1,-1], [1,-1], [] ]
+  @move_dir     Enum.zip( @valid_pieces, @directions )
+
+  for {{color, type}, x} <- Enum.zip( @valid_pieces, @string_repr ) do
     def string(%Piece{color: unquote(color), type: unquote(type)}), do: unquote(x)
   end
 

@@ -10,7 +10,12 @@ defmodule BoardTest do
 
   test "defimpl String.Chars.to_string -> Board" do
     a = Board.new()
+    IO.puts(a)
     assert to_string(a)
+  end
+
+  test "Board.update_piece" do
+    assert true
   end
 
   #test "String.Chars.to_string(%Board{})" do

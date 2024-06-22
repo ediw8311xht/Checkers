@@ -17,14 +17,42 @@ defmodule Board do
     end
   )
 
-
+  #------------------BASIC-------------------#
   def new(), do: new(pieces: @default_pieces, to_move: @default_to_move)
   def new(pieces: pieces, to_move: to_move), do: %Board{pieces: pieces, to_move: to_move}
 
-  def string(%Board{pieces: pieces}) do
-    Enum.reduce((for y <- 1..8, x <- 1..8, do: {x, y}), "", fn pos, acc ->
-      (pieces[pos] |> Piece.string()) <> acc
-    end)
+  defp update_to_move( board = %Board{ to_move: :black } ), do: %Board{ board | to_move: :red   }
+  defp update_to_move( board = %Board{ to_move: :red   } ), do: %Board{ board | to_move: :black }
+
+  def get_piece(%Board{pieces: pieces}, pos = {_x, _y}), do: pieces[pos]
+
+  defp update_pieces(board = %Board{pieces: pieces}, new_pieces = %{}) do
+    %Board{ board | pieces: Map.merge(pieces, new_pieces) }
+  end
+
+  #------------------VALIDATION--------------#
+
+
+  #------------------STRING------------------#
+  @doc"""
+    string(%Board{}, row: row, column: column) ->
+      outputs pieces in board as string
+  """
+  def string(%Board{pieces: pieces}, row: row, column: column) do
+    pieces[{row, column}] |> Piece.string()
+  end
+
+  def string(board = %Board{}, row: row) do
+    Enum.reduce(1..8, "", fn y, acc -> string(board, row: row, column: y) <> acc end)
+  end
+
+  def string(board = %Board{}, column: column) do
+    Enum.reduce(1..8, "", fn x, acc -> string(board, row: x, column: column) <> acc end)
+  end
+
+  def string(board = %Board{}) do
+    Stream.map(1..8, fn y -> string(board, column: y) end)
+    |> Enum.join(",")
   end
 end
 
