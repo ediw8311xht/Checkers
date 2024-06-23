@@ -37,7 +37,12 @@ defmodule Board do
   end
 
   #------------------CAPTURES----------------#
-  defp get_captures(board = %Board{}, color: color) do
+  defp valid_captures(board = %Board{}, pos = {_x, _y}) do
+    get_pieces(board, pos)
+    |> Piece.dir_captures()
+  end
+
+  defp valid_captures(board = %Board{}, color: color) do
     get_pieces(board, color: color)
   end
   #------------------VALIDATION--------------#
