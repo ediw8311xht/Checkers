@@ -36,8 +36,13 @@ defmodule Board do
     %Board{ board | pieces: Map.merge(pieces, new_pieces) }
   end
 
+  #------------------CAPTURES----------------#
+  defp get_captures(board = %Board{}, color: color) do
+    get_pieces(board, color: color)
+  end
   #------------------VALIDATION--------------#
   defp validate_color(%Board{to_move: to_move}, %Piece{color: color}), do: to_move == color
+
 
 
   #------------------STRING------------------#
