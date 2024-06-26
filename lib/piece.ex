@@ -1,30 +1,41 @@
 
 defmodule Piece do
-  defstruct color: :empty, type: :empty
+  defstruct color: :empty, type: :empty, pos: :nil
+  alias Generator, as: G
 
-  @valid_pieces [ {:black,:normal}, {:red,:normal},   {:black,:king},                {:red,:king},                  {:empty,:empty} ]
-  @string_repr  [ "o",              "x",              "O",                           "X",                           "-"             ]
-  @non_capture  [ [{1,1},{-1,1}],   [{1,-1},{-1,-1}], [{1,1},{-1,1},{1,-1},{-1,-1}], [{1,1},{-1,1},{1,-1},{-1,-1}], []              ]
-  @capture      [ [{2,2},{-2,2}],   [{2,-2},{-2,-2}], [{2,2},{-2,2},{2,-2},{-2,-2}], [{2,2},{-2,2},{2,-2},{-2,-2}], []              ]
-  @table        Enum.zip([@valid_pieces, @string_repr, @non_capture, @capture])
 
-  def king_me(piece = %Piece{}), do: %{piece | type: :king}
+  @points for y <- 1..8, x <- 1..8, into: [], do: {x, y}
+  @table [
+    { {:black,  :normal } , "o" , [{1,1},{-1,1}]                ,  [{2,2},{-2,2}]                },
+    { {:red,    :normal } , "x" , [{1,-1},{-1,-1}]              ,  [{2,-2},{-2,-2}]              },
+    { {:black,  :king   } , "O" , [{1,1},{-1,1},{1,-1},{-1,-1}] ,  [{2,2},{-2,2},{2,-2},{-2,-2}] },
+    { {:red,    :king   } , "X" , [{1,1},{-1,1},{1,-1},{-1,-1}] ,  [{2,2},{-2,2},{2,-2},{-2,-2}] },
+    { {:empty,  :empty  } , "-" , []                            ,  []                            },
+  ]
 
-  for {{color, type}, string, non_capture, capture} <- @table do
-    def          new(        color: unquote(color), type: unquote(type)  ), do: %Piece{color: unquote(color), type: unquote(type)}
-    def       string( %Piece{color: unquote(color), type: unquote(type)} ), do: unquote(string)
-    def    dir_moves( %Piece{color: unquote(color), type: unquote(type)} ), do: unquote(non_capture)
-    def dir_captures( %Piece{color: unquote(color), type: unquote(type)} ), do: unquote(Enum.zip(non_capture, capture))
+  def king_me(piece = %Piece{color: :black, type: :normal, pos: {_x, 8}}), do: {true, %{piece | type: :king}}
+  def king_me(piece = %Piece{color: :red  , type: :normal, pos: {_x, 1}}), do: {true, %{piece | type: :king}}
+  def king_me(piece = %Piece{}), do: {false, piece}
 
-    for pos <- capture do
-      def valid_direction( %Piece{color: unquote(color), type: unquote(type)}, unquote(pos)), do: true
+  def new(color: color, type: type, pos: pos), do: %Piece{color: color, type: type, pos: pos}
+
+  for {{color, type}, string, moves, captures} <- @table do
+    if color != :empty do
+      for point <- @points do
+        non_points = G.from_direction_multi(point, moves)
+        cap_points = G.from_direction_multi(point, captures)
+        def valid_moves(%Piece{color: unquote(color), type: unquote(type), pos: unquote(point)}),
+          do: unquote(non_points)
+        def valid_captures(%Piece{color: unquote(color), type: unquote(type), pos: unquote(point)}),
+          do: unquote(cap_points)
+      end
     end
-
-    for pos <- non_capture do
-      def valid_direction( %Piece{color: unquote(color), type: unquote(type)}, unquote(pos), capture: true ), do: true
-    end
+    def string(%Piece{color: unquote(color), type: unquote(type)}), do: unquote(string)
   end
 
+  def valid_move(_, _), do: false
+  def valid_move(_, _, capture: _), do: false
 end
+
 
 

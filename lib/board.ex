@@ -1,6 +1,6 @@
 
 defmodule Board do
-  alias MyHelpers, as: MH
+  #alias MyHelpers, as: MH
 
   defstruct pieces: %{}, to_move: :nil
 
@@ -10,9 +10,9 @@ defmodule Board do
   @default_pieces (
     for y <- 1..8, x <- 1..8, into: %{} do
       cond do
-        {x, y} in @default_red   -> {{x, y}, Piece.new(color: :red  , type: :normal)}
-        {x, y} in @default_black -> {{x, y}, Piece.new(color: :black, type: :normal)}
-        true                     -> {{x, y}, Piece.new(color: :empty, type: :empty)}
+        {x, y} in @default_red   -> {{x, y}, Piece.new(color: :red  , type: :normal, pos: {x, y})}
+        {x, y} in @default_black -> {{x, y}, Piece.new(color: :black, type: :normal, pos: {x, y})}
+        true                     -> {{x, y}, Piece.new(color: :empty, type: :empty,  pos: {x, y})}
       end
     end
   )
@@ -25,8 +25,8 @@ defmodule Board do
   defp update_to_move( board = %Board{ to_move: :black } ), do: %Board{ board | to_move: :red   }
   defp update_to_move( board = %Board{ to_move: :red   } ), do: %Board{ board | to_move: :black }
 
-  defp get_pieces(%Board{pieces: pieces}, pos: pos = {_x, _y}), do: pieces[pos]
-  for i <- [:red, :black] do
+  defp get_piece(%Board{pieces: pieces}, pos = {_x, _y}), do: pieces[pos]
+  for i <- [:red, :black, :empty] do
     defp get_pieces(%Board{pieces: pieces}, color: unquote(i)) do
       Enum.filter(pieces, fn {_pos, %Piece{color: color}} -> color == unquote(i) end)
     end
@@ -37,14 +37,6 @@ defmodule Board do
   end
 
   #------------------CAPTURES----------------#
-  defp valid_captures(board = %Board{}, pos = {_x, _y}) do
-    get_pieces(board, pos)
-    |> Piece.dir_captures()
-  end
-
-  defp valid_captures(board = %Board{}, color: color) do
-    get_pieces(board, color: color)
-  end
   #------------------VALIDATION--------------#
   defp validate_color(%Board{to_move: to_move}, %Piece{color: color}), do: to_move == color
 

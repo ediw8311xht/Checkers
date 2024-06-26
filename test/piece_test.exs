@@ -4,9 +4,9 @@ defmodule PieceTest do
   doctest Piece
 
   test "Piece.new()" do
-    for color <- [:red, :black] do
-      for type <- [:normal, :king] do
-        assert Piece.new(color: color, type: type) == %Piece{color: color, type: type}
+    for x <- 1..8, y <- 1..8 do
+      for color <- [:red, :black], type <- [:normal, :king] do
+          assert Piece.new(color: color, type: type, pos: {x, y}) == %Piece{color: color, type: type, pos: {x, y}}
       end
     end
   end
