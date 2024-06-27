@@ -1,7 +1,7 @@
 
 defmodule Piece do
+  import Generator
   defstruct color: :empty, type: :empty, pos: :nil
-  alias Generator, as: G
 
   defmacro p({color, pos={_x,_y}}),       do: quote do: %Piece{color: unquote(color), pos: unquote(pos)}
   defmacro p({color, type}),              do: quote do: %Piece{color: unquote(color), type: unquote(type)}
@@ -27,13 +27,13 @@ defmodule Piece do
     opp_color = @opposite[color]
     for point <- @points do
       cpiece = {color, type, point}
-      non_points = G.from_direction_multi(point, moves)
-      cap_points = G.from_direction_multi(point, captures)
+      non_points = from_direction_multi(point, moves)
+      cap_points = from_direction_multi(point, captures)
       for [h, ^point] <- non_points do
-        def valid_move( p(unquote({:empty, :empty, h})), p(unquote(cpiece)) ), do: true
+        def valid_move( [p(unquote({:empty, :empty, h})), p(unquote(cpiece))] ), do: true
       end
       for [h, m, ^point] <- cap_points do
-        def valid_capture( p(unquote({:empty, :empty, h})), p(unquote({opp_color, m})), p(unquote(cpiece)) ), do: true
+        def valid_move( [p(unquote({:empty, :empty, h})), p(unquote({opp_color, m})), p(unquote(cpiece))] ), do: true
       end
       def list_moves(    p(unquote(cpiece)) ), do: unquote(non_points)
       def list_captures( p(unquote(cpiece)) ), do: unquote(cap_points)
@@ -42,10 +42,9 @@ defmodule Piece do
   end
 
   def string(%Piece{color: :empty, type: :empty}), do: "-"
-  def valid_move(_, _),       do: false
-  def valid_capture(_, _, _), do: false
-  def list_moves(_),          do: []
-  def list_captures(_),       do: []
+  def valid_move(_),     do: false
+  def list_moves(_),     do: []
+  def list_captures(_),  do: []
 end
 
 

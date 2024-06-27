@@ -1,6 +1,6 @@
 
 defmodule Board do
-  #alias MyHelpers, as: MH
+  import Generator
 
   defstruct pieces: %{}, to_move: :nil
 
@@ -22,26 +22,58 @@ defmodule Board do
   def new(pieces: pieces, to_move: to_move), do: %Board{pieces: pieces, to_move: to_move}
 
   #------------------UTILITY-----------------#
-  defp update_to_move( board = %Board{ to_move: :black } ), do: %Board{ board | to_move: :red   }
-  defp update_to_move( board = %Board{ to_move: :red   } ), do: %Board{ board | to_move: :black }
+  def update_to_move( board = %Board{ to_move: :black } ), do: %Board{ board | to_move: :red   }
+  def update_to_move( board = %Board{ to_move: :red   } ), do: %Board{ board | to_move: :black }
 
-  defp get_piece(%Board{pieces: pieces}, pos = {_x, _y}), do: pieces[pos]
+  def get_piece(%Board{pieces: pieces}, pos = {_x, _y}), do: pieces[pos]
   for i <- [:red, :black, :empty] do
-    defp get_pieces(%Board{pieces: pieces}, color: unquote(i)) do
+    def get_pieces(%Board{pieces: pieces}, color: unquote(i)) do
       Enum.filter(pieces, fn {_pos, %Piece{color: color}} -> color == unquote(i) end)
     end
   end
 
-  defp update_pieces(board = %Board{pieces: pieces}, new_pieces = %{}) do
+  def update_pieces(board = %Board{pieces: pieces}, new_pieces = %{}) do
     %Board{ board | pieces: Map.merge(pieces, new_pieces) }
   end
 
   #------------------CAPTURES----------------#
+  def validate_from_positions(board = %Board{}, pos_list = [_ | _]) do
+    Enum.map(pos_list, &(get_piece(board, &1)))
+    |> Piece.valid_move()
+  end
+
+  defp get_captures(board = %Board{}, piece = %Piece{}) do
+    Piece.list_captures(piece)
+    |> Enum.filter(&(validate_from_positions(board, &1)))
+  end
+
+  defp get_moves(board = %Board{}, piece = %Piece{}) do
+    Piece.list_moves(piece)
+    |> Enum.filter(&(validate_from_positions(board, &1)))
+  end
+
+  def all_valid(_, {x, y}) when not in_range(x, y), do: false
+  def all_valid(board = %Board{}, pos = {_x, _y}) do
+    piece    =  get_piece(board, pos)
+    captures =  get_captures(board, piece)
+    moves    =  get_moves(board, piece)
+    cond do
+      not validate_color(board, piece) -> []
+      captures != [] -> captures
+      true -> moves
+    end
+  end
+
+  def move(_, {x, y}, {x2, y2}) when not (in_range(x, y) and in_range(x2, y2)), do: false
+  def move(board = %Board{}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    piece = get_piece(board, pos)
+    cond do
+      not validate_color(board, piece) -> false
+      true -> Enum.find(Piece.list_moves(piece), fn [e, _s] -> e == pos2 end)
+    end
+  end
   #------------------VALIDATION--------------#
   defp validate_color(%Board{to_move: to_move}, %Piece{color: color}), do: to_move == color
-
-
-
   #------------------STRING------------------#
   @doc"""
     string(%Board{}, row: row, column: column) ->

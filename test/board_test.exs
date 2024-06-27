@@ -3,19 +3,27 @@ defmodule BoardTest do
   use ExUnit.Case
   doctest Board
 
-  test "Board.new()" do
-    a = Board.new()
-    assert a
-  end
-
-  test "defimpl String.Chars.to_string -> Board" do
+  test "defimpl String.Chars.to_string for Board" do
     a = Board.new()
     IO.puts(a)
     assert to_string(a)
   end
 
-  test "Board.update_piece" do
-    assert true
+  test "new()" do
+    a = Board.new()
+    assert a
+  end
+
+  #test "move/3" do
+  #  a = Board.new()
+  #  b = Board.move(a, {3, 3}, {4, 4})
+  #  assert b == [{4, 4}, {3, 3}]
+  #end
+
+  test "all_valid/2" do
+    a = Board.new()
+    b = Board.all_valid(a, {3, 3})
+    IO.inspect(b)
   end
 
   #test "String.Chars.to_string(%Board{})" do

@@ -1,5 +1,8 @@
 
 defmodule Generator do
+  defguard in_range(n) when n >= 1 and n <= 8
+  defguard in_range(x, y) when (x >= 1 and x <= 8 and y >= 1 and y <= 8)
+
   def slope({x, y}, {x2, y2}), do: {x2 - x, y2 - y}
 
   def gcf({x, y}) do
@@ -15,8 +18,6 @@ defmodule Generator do
   def add(  {x, y}, {x2, y2}), do: {x + x2, y + y2}
   def minus({x, y}, {x2, y2}), do: {x - x2, y - y2}
 
-  def in_range(n) when is_integer(n), do: n >= 1 and n <= 8
-  def in_range({x, y}), do: in_range(x) and in_range(y)
 
   def from_slope(p={x, y}, s={_sx, _sy}, e={end_x, end_y}, limit \\ 100) do
     cond do
@@ -26,13 +27,10 @@ defmodule Generator do
     end
   end
 
+  def from_direction({x, y}, {x2, y2}) when not in_range(x + x2, y + y2), do: false
   def from_direction(pos = {_x, _y}, direction = {_x2, _y2}) do
     end_pos = add(pos, direction)
-    if in_range(end_pos) do
-      from_slope(pos, gcf(direction), end_pos)
-    else
-      :nil
-    end
+    from_slope(pos, gcf(direction), end_pos)
   end
   def from_direction_multi(pos = {_x, _y}, directions = [_ | _]) do
     Stream.map(directions, &(from_direction(pos, &1)))
