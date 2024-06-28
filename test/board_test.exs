@@ -14,17 +14,24 @@ defmodule BoardTest do
     assert a
   end
 
+  test "get_pieces/2" do
+    a = Board.new()
+    b = Board.get_pieces(a, color: :red)
+    IO.inspect(b)
+  end
+
+  test "all_valid/2" do
+    a = Board.new()
+    piece = Board.get_piece(a, {3, 3})
+    b = Board.all_valid(a, piece: piece)
+    assert b == [ [{4, 4}, {3, 3}], [{2, 4}, {3, 3}] ]
+  end
+
   #test "move/3" do
   #  a = Board.new()
   #  b = Board.move(a, {3, 3}, {4, 4})
   #  assert b == [{4, 4}, {3, 3}]
   #end
-
-  test "all_valid/2" do
-    a = Board.new()
-    b = Board.all_valid(a, {3, 3})
-    IO.inspect(b)
-  end
 
   #test "String.Chars.to_string(%Board{})" do
   #  a = Board.new()

@@ -17,7 +17,6 @@ defmodule Board do
     end
   )
 
-  #------------------PUBLIC------------------#
   def new(), do: new(pieces: @default_pieces, to_move: @default_to_move)
   def new(pieces: pieces, to_move: to_move), do: %Board{pieces: pieces, to_move: to_move}
 
@@ -26,9 +25,15 @@ defmodule Board do
   def update_to_move( board = %Board{ to_move: :red   } ), do: %Board{ board | to_move: :black }
 
   def get_piece(%Board{pieces: pieces}, pos = {_x, _y}), do: pieces[pos]
+  def get_pieces(%Board{pieces: pieces}, row: row) do
+    Map.values(pieces) |> Enum.filter(fn %Piece{pos: {x, _y}} -> row == x end)
+  end
+  def get_pieces(%Board{pieces: pieces}, column: column) do
+    Map.values(pieces) |> Enum.filter(fn %Piece{pos: {_x, y}} -> y == column end)
+  end
   for i <- [:red, :black, :empty] do
     def get_pieces(%Board{pieces: pieces}, color: unquote(i)) do
-      Enum.filter(pieces, fn {_pos, %Piece{color: color}} -> color == unquote(i) end)
+      Map.values(pieces) |> Enum.filter(fn %Piece{color: color} -> color == unquote(i) end)
     end
   end
 
@@ -42,21 +47,24 @@ defmodule Board do
     |> Piece.valid_move()
   end
 
-  defp get_captures(board = %Board{}, piece = %Piece{}) do
+  defp get_captures(board = %Board{}, piece: piece = %Piece{}) do
     Piece.list_captures(piece)
     |> Enum.filter(&(validate_from_positions(board, &1)))
   end
 
-  defp get_moves(board = %Board{}, piece = %Piece{}) do
+  defp get_captures(board = %Board{}, color: color) do
+    get_pieces(board, color: color)
+    |> Enum.map(fn piece -> get_captures(board, piece: piece) end)
+  end
+
+  defp get_moves(board = %Board{}, piece: piece = %Piece{}) do
     Piece.list_moves(piece)
     |> Enum.filter(&(validate_from_positions(board, &1)))
   end
 
-  def all_valid(_, {x, y}) when not in_range(x, y), do: false
-  def all_valid(board = %Board{}, pos = {_x, _y}) do
-    piece    =  get_piece(board, pos)
-    captures =  get_captures(board, piece)
-    moves    =  get_moves(board, piece)
+  def all_valid(board = %Board{}, piece: piece = %Piece{}) do
+    captures =  get_captures(board, piece: piece)
+    moves    =  get_moves(board, piece: piece)
     cond do
       not validate_color(board, piece) -> []
       captures != [] -> captures
@@ -72,8 +80,10 @@ defmodule Board do
       true -> Enum.find(Piece.list_moves(piece), fn [e, _s] -> e == pos2 end)
     end
   end
+
   #------------------VALIDATION--------------#
   defp validate_color(%Board{to_move: to_move}, %Piece{color: color}), do: to_move == color
+
   #------------------STRING------------------#
   @doc"""
     string(%Board{}, row: row, column: column) ->
@@ -82,15 +92,12 @@ defmodule Board do
   def string(%Board{pieces: pieces}, row: row, column: column) do
     pieces[{row, column}] |> Piece.string()
   end
-
   def string(board = %Board{}, row: row) do
     Enum.reduce(1..8, "", fn y, acc -> string(board, row: row, column: y) <> acc end)
   end
-
   def string(board = %Board{}, column: column) do
     Enum.reduce(1..8, "", fn x, acc -> string(board, row: x, column: column) <> acc end)
   end
-
   def string(board = %Board{}) do
     Stream.map(1..8, fn y -> string(board, column: y) end)
     |> Enum.join(",")
