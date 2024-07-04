@@ -34,7 +34,7 @@ defmodule Generator do
   end
   def from_direction_multi(pos = {_x, _y}, directions = [_ | _]) do
     Stream.map(directions, &(from_direction(pos, &1)))
-    |> Enum.filter(&(&1 != :nil))
+    |> Enum.filter(&(&1))
   end
 end
 

@@ -42,47 +42,51 @@ defmodule Board do
   end
 
   #------------------CAPTURES----------------#
-  def validate_from_positions(board = %Board{}, pos_list = [_ | _]) do
-    Enum.map(pos_list, &(get_piece(board, &1)))
-    |> Piece.valid_move()
-  end
-
-  defp get_captures(board = %Board{}, piece: piece = %Piece{}) do
+  def get_captures(board = %Board{}, piece: piece = %Piece{}) do
     Piece.list_captures(piece)
-    |> Enum.filter(&(validate_from_positions(board, &1)))
+    |> Enum.filter(&(v_from_positions(board, &1)))
   end
 
-  defp get_captures(board = %Board{}, color: color) do
+  def get_captures(board = %Board{}, color: color) do
     get_pieces(board, color: color)
-    |> Enum.map(fn piece -> get_captures(board, piece: piece) end)
+    |> Stream.map(fn piece -> get_captures(board, piece: piece) end)
+    |> Enum.filter(fn captures -> captures != [] end)
   end
 
-  defp get_moves(board = %Board{}, piece: piece = %Piece{}) do
+  def get_moves(board = %Board{}, piece: piece = %Piece{}) do
     Piece.list_moves(piece)
-    |> Enum.filter(&(validate_from_positions(board, &1)))
+    |> Enum.filter(&(v_from_positions(board, &1)))
   end
 
   def all_valid(board = %Board{}, piece: piece = %Piece{}) do
     captures =  get_captures(board, piece: piece)
     moves    =  get_moves(board, piece: piece)
     cond do
-      not validate_color(board, piece) -> []
+      not v_to_move(board, piece) -> []
       captures != [] -> captures
       true -> moves
     end
   end
 
-  def move(_, {x, y}, {x2, y2}) when not (in_range(x, y) and in_range(x2, y2)), do: false
   def move(board = %Board{}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
-    piece = get_piece(board, pos)
-    cond do
-      not validate_color(board, piece) -> false
-      true -> Enum.find(Piece.list_moves(piece), fn [e, _s] -> e == pos2 end)
-    end
+    valid = valid_move(board, pos, pos2)
   end
 
   #------------------VALIDATION--------------#
-  defp validate_color(%Board{to_move: to_move}, %Piece{color: color}), do: to_move == color
+  def v_to_move(%Board{to_move: to_move}, %Piece{color: color}), do: to_move == color
+  def v_from_positions(board = %Board{}, pos_list = [_ | _]) do
+    Enum.map(pos_list, &(get_piece(board, &1)))
+    |> Piece.valid_move()
+  end
+  def valid_move(_, {x, y}, {x2, y2}) when not (in_range(x, y) and in_range(x2, y2)), do: false
+  def valid_move(board = %Board{to_move: to_move}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
+    piece = get_piece(board, pos)
+    captures = get_captures(board, color: to_move)
+    cond do
+      not v_to_move(board, piece) -> false
+    end
+  end
+
 
   #------------------STRING------------------#
   @doc"""

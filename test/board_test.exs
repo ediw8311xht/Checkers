@@ -17,7 +17,7 @@ defmodule BoardTest do
   test "get_pieces/2" do
     a = Board.new()
     b = Board.get_pieces(a, color: :red)
-    IO.inspect(b)
+    #IO.inspect(b)
   end
 
   test "all_valid/2" do
@@ -25,6 +25,19 @@ defmodule BoardTest do
     piece = Board.get_piece(a, {3, 3})
     b = Board.all_valid(a, piece: piece)
     assert b == [ [{4, 4}, {3, 3}], [{2, 4}, {3, 3}] ]
+  end
+
+  test "Board.get_captures/2 piece:" do
+    a = Board.new()
+    piece = Board.get_piece(a, {3, 3})
+    Board.get_captures(a, piece: piece)
+    |> IO.inspect()
+  end
+
+  test "Board.get_captures/2 color:" do
+    a = Board.new()
+    Board.get_captures(a, color: :red)
+    |> IO.inspect()
   end
 
   #test "move/3" do
@@ -41,11 +54,6 @@ defmodule BoardTest do
   #  assert string
   #end
 
-  #test "Board.all_capture/1" do
-  #  a = Board.new()
-  #  Board.all_capture(a)
-  #  |> IO.inspect()
-  #end
 
   #test "Board.move/3" do
   #  a = Board.new()
