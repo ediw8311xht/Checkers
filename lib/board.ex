@@ -12,7 +12,7 @@ defmodule Board do
       cond do
         {x, y} in @default_red   -> {{x, y}, Piece.new(color: :red  , type: :normal, pos: {x, y})}
         {x, y} in @default_black -> {{x, y}, Piece.new(color: :black, type: :normal, pos: {x, y})}
-        true                     -> {{x, y}, Piece.new(color: :empty, type: :empty,  pos: {x, y})}
+        true                     -> {{x, y}, Piece.new({x, y})}
       end
     end
   )
@@ -37,8 +37,16 @@ defmodule Board do
     end
   end
 
-  def update_pieces(board = %Board{pieces: pieces}, new_pieces = %{}) do
+  def update_pieces(board = %Board{pieces: pieces}, new_pieces: new_pieces = %{}) do
     %Board{ board | pieces: Map.merge(pieces, new_pieces) }
+  end
+
+  def empty_pieces(board = %Board{pieces: pieces}, positions) do
+    %Board{ board | pieces:
+      Enum.reduce(positions, pieces, fn pos, acc ->
+        %{acc | pos => Piece.new(pos)}
+      end)
+    }
   end
 
   #------------------CAPTURES----------------#
@@ -68,7 +76,13 @@ defmodule Board do
     end
   end
 
-  def internal_move(board, position_list) do
+  def internal_move(board = %Board{pieces: pieces}, [p1, p2, p3]) do
+    9
+    #piece = get_piece(p3)
+    #update_pieces(board, %{p1: %Piece.new()}
+  end
+
+  def internal_move(board = %Board{pieces: pieces}, [p1, p2]) do
   end
 
   def move(board = %Board{}, pos = {_x, _y}, pos2 = {_x2, _y2}) do

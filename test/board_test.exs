@@ -40,7 +40,7 @@ defmodule BoardTest do
     assert captures == []
 
     new_pieces = %{{4, 4} => Piece.new(color: :red, type: :normal, pos: {4, 4})}
-    board = Board.update_pieces(board, new_pieces)
+    board = Board.update_pieces(board, new_pieces: new_pieces)
     piece = Board.get_piece(board, {3, 3})
     captures = Board.get_captures(board, piece: piece)
     assert captures == [ [{5, 5}, {4, 4}, {3, 3}] ]
@@ -58,11 +58,11 @@ defmodule BoardTest do
     IO.inspect(move)
   end
 
-  #test "move/3" do
-  #  board = Board.new()
-  #  b = Board.move(board, {3, 3}, {4, 4})
-  #  assert b == [{4, 4}, {3, 3}]
-  #end
+  test "Board.empty_pieces" do
+    board = Board.new()
+    b = Board.empty_pieces(board, [{3, 3}])
+    IO.puts(b)
+  end
 
   #test "String.Chars.to_string(%Board{})" do
   #  board = Board.new()

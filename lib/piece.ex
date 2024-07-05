@@ -11,16 +11,17 @@ defmodule Piece do
   @opposite %{red: :black, black: :red, empty: :empty}
   @points for y <- 1..8, x <- 1..8, into: [], do: {x, y}
   @table [
-    { {:black,  :normal } , "o" , [{1,1},{-1,1}]                ,  [{2,2},{-2,2}]                },
-    { {:red,    :normal } , "x" , [{1,-1},{-1,-1}]              ,  [{2,-2},{-2,-2}]              },
-    { {:black,  :king   } , "O" , [{1,1},{-1,1},{1,-1},{-1,-1}] ,  [{2,2},{-2,2},{2,-2},{-2,-2}] },
-    { {:red,    :king   } , "X" , [{1,1},{-1,1},{1,-1},{-1,-1}] ,  [{2,2},{-2,2},{2,-2},{-2,-2}] },
+    { {:black,  :normal } , "b" , [{1,1},{-1,1}]                ,  [{2,2},{-2,2}]                },
+    { {:red,    :normal } , "r" , [{1,-1},{-1,-1}]              ,  [{2,-2},{-2,-2}]              },
+    { {:black,  :king   } , "B" , [{1,1},{-1,1},{1,-1},{-1,-1}] ,  [{2,2},{-2,2},{2,-2},{-2,-2}] },
+    { {:red,    :king   } , "R" , [{1,1},{-1,1},{1,-1},{-1,-1}] ,  [{2,2},{-2,2},{2,-2},{-2,-2}] },
   ]
 
   def king_me(piece = %Piece{color: :black, type: :normal, pos: {_x, 8}}), do: {true, %{piece | type: :king}}
   def king_me(piece = %Piece{color: :red  , type: :normal, pos: {_x, 1}}), do: {true, %{piece | type: :king}}
   def king_me(piece = %Piece{}), do: {false, piece}
 
+  def new(pos = {_x, _y}), do: %Piece{color: :empty, type: :empty, pos: pos}
   def new(color: color, type: type, pos: pos), do: %Piece{color: color, type: type, pos: pos}
 
   for {{color, type}, string, moves, captures} <- @table do
