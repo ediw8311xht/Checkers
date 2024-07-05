@@ -37,6 +37,10 @@ defmodule Board do
     end
   end
 
+  def insert_piece(board = %Board{}, piece: piece) do
+    update_pieces(board, new_pieces: %{piece.pos => piece})
+  end
+
   def update_pieces(board = %Board{pieces: pieces}, new_pieces: new_pieces = %{}) do
     %Board{ board | pieces: Map.merge(pieces, new_pieces) }
   end
@@ -76,13 +80,10 @@ defmodule Board do
     end
   end
 
-  def internal_move(board = %Board{pieces: pieces}, [p1, p2, p3]) do
-    9
-    #piece = get_piece(p3)
-    #update_pieces(board, %{p1: %Piece.new()}
-  end
-
-  def internal_move(board = %Board{pieces: pieces}, [p1, p2]) do
+  def internal_move(board = %Board{}, [head | tail]) do
+    new_piece = get_piece(board, List.last(tail)) |> Piece.update(pos: head)
+    insert_piece(board, piece: new_piece)
+    |> empty_pieces(tail)
   end
 
   def move(board = %Board{}, pos = {_x, _y}, pos2 = {_x2, _y2}) do

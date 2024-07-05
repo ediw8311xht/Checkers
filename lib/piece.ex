@@ -24,6 +24,10 @@ defmodule Piece do
   def new(pos = {_x, _y}), do: %Piece{color: :empty, type: :empty, pos: pos}
   def new(color: color, type: type, pos: pos), do: %Piece{color: color, type: type, pos: pos}
 
+  for type <- [:color, :type, :pos] do
+    def update(piece = %Piece{}, [{unquote(type), g}]), do: %{piece | unquote(type) => g}
+  end
+
   for {{color, type}, string, moves, captures} <- @table do
     opp_color = @opposite[color]
     for point <- @points do
