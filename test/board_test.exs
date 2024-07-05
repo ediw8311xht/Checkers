@@ -4,50 +4,68 @@ defmodule BoardTest do
   doctest Board
 
   test "defimpl String.Chars.to_string for Board" do
-    a = Board.new()
-    IO.puts(a)
-    assert to_string(a)
+    board = Board.new()
+    assert to_string(board)
   end
 
   test "new()" do
-    a = Board.new()
-    assert a
+    board = Board.new()
+    assert board
   end
 
   test "get_pieces/2" do
-    a = Board.new()
-    b = Board.get_pieces(a, color: :red)
+    board = Board.new()
+    b = Board.get_pieces(board, color: :red)
     #IO.inspect(b)
   end
 
   test "all_valid/2" do
-    a = Board.new()
-    piece = Board.get_piece(a, {3, 3})
-    all_valid = Board.all_valid(a, piece: piece)
+    board = Board.new()
+    piece = Board.get_piece(board, {3, 3})
+    all_valid = Board.all_valid(board, piece: piece)
     assert all_valid == [ [{4, 4}, {3, 3}], [{2, 4}, {3, 3}] ]
   end
 
+  test "Board.get_moves/2 piece:" do
+    board = Board.new()
+    piece = Board.get_piece(board, {3, 3})
+    moves = Board.get_moves(board, piece: piece)
+    assert moves == [ [{4, 4}, {3, 3}], [{2, 4}, {3, 3}] ]
+  end
+
   test "Board.get_captures/2 piece:" do
-    a = Board.new()
-    piece = Board.get_piece(a, {3, 3})
-    captures = Board.get_captures(a, piece: piece)
+    board = Board.new()
+    piece = Board.get_piece(board, {3, 3})
+    captures = Board.get_captures(board, piece: piece)
     assert captures == []
+
+    new_pieces = %{{4, 4} => Piece.new(color: :red, type: :normal, pos: {4, 4})}
+    board = Board.update_pieces(board, new_pieces)
+    piece = Board.get_piece(board, {3, 3})
+    captures = Board.get_captures(board, piece: piece)
+    assert captures == [ [{5, 5}, {4, 4}, {3, 3}] ]
   end
 
   test "Board.get_captures/2 color:" do
-    a = Board.new()
-    captures = Board.get_captures(a, color: :red)
+    board = Board.new()
+    captures = Board.get_captures(board, color: :red)
     assert captures == []
   end
 
+  test "Board.move/3" do
+    board = Board.new()
+    move = Board.move(board, {3, 3}, {4, 4})
+    IO.inspect(move)
+  end
+
   #test "move/3" do
-  #  a = Board.new()
-  #  b = Board.move(a, {3, 3}, {4, 4})
+  #  board = Board.new()
+  #  b = Board.move(board, {3, 3}, {4, 4})
   #  assert b == [{4, 4}, {3, 3}]
   #end
 
   #test "String.Chars.to_string(%Board{})" do
-  #  a = Board.new()
+  #  board = Board.new()
   #  string = to_string(a)
   #  IO.puts("")
   #  IO.puts(a)
@@ -56,8 +74,8 @@ defmodule BoardTest do
 
 
   #test "Board.move/3" do
-  #  a = Board.new()
-  #  {valid, board} = Board.move_piece(a, {1, 3}, {2, 4})
+  #  board = Board.new()
+  #  {valid, board} = Board.move_piece(board, {1, 3}, {2, 4})
   #  IO.puts(board)
   #end
 
