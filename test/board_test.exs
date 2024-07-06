@@ -57,6 +57,7 @@ defmodule BoardTest do
     board = Board.internal_move(board, [{4, 4}, {3, 3}])
     assert Board.get_piece(board, {3, 3}) == %Piece{color: :empty, type: :empty, pos: {3, 3}}
     assert Board.get_piece(board, {4, 4}) == %Piece{color: :black, type: :normal, pos: {4, 4}}
+    assert board.to_move == :red
   end
 
   test "Board.move/3" do
@@ -68,8 +69,13 @@ defmodule BoardTest do
 
   test "Board.empty_pieces" do
     board = Board.new()
-    b = Board.empty_pieces(board, [{3, 3}])
-    assert Board.get_piece(b, {3, 3}) == %Piece{color: :empty, type: :empty, pos: {3, 3}}
+    board = Board.empty_pieces(board, [{3, 3}])
+    assert Board.get_piece(board, {3, 3}) == %Piece{color: :empty, type: :empty, pos: {3, 3}}
+  end
+
+  test "Capture" do
+    board = Board.new()
+    #board.internal
   end
 
 end

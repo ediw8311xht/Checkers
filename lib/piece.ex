@@ -17,15 +17,18 @@ defmodule Piece do
     { {:red,    :king   } , "R" , [{1,1},{-1,1},{1,-1},{-1,-1}] ,  [{2,2},{-2,2},{2,-2},{-2,-2}] },
   ]
 
-  def king_me(piece = %Piece{color: :black, type: :normal, pos: {_x, 8}}), do: {true, %{piece | type: :king}}
-  def king_me(piece = %Piece{color: :red  , type: :normal, pos: {_x, 1}}), do: {true, %{piece | type: :king}}
-  def king_me(piece = %Piece{}), do: {false, piece}
+  def king_me(piece = %Piece{color: :black, type: :normal, pos: {_x, 8}}), do: %{piece | type: :king}
+  def king_me(piece = %Piece{color: :red  , type: :normal, pos: {_x, 1}}), do: %{piece | type: :king}
+  def king_me(piece = %Piece{}), do: piece
 
   def new(pos = {_x, _y}), do: %Piece{color: :empty, type: :empty, pos: pos}
   def new(color: color, type: type, pos: pos), do: %Piece{color: color, type: type, pos: pos}
 
-  for type <- [:color, :type, :pos] do
-    def update(piece = %Piece{}, [{unquote(type), g}]), do: %{piece | unquote(type) => g}
+
+
+  def update(piece = %Piece{}, pos: pos), do: %Piece{piece | pos: pos} |> king_me()
+  for type <- [:color, :type] do
+    def update(piece = %Piece{}, [{unquote(type), g}]), do: %Piece{piece | unquote(type) => g}
   end
 
   for {{color, type}, string, moves, captures} <- @table do

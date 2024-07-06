@@ -21,6 +21,8 @@ defmodule Board do
   def new(pieces: pieces, to_move: to_move), do: %Board{pieces: pieces, to_move: to_move}
 
   #------------------UTILITY-----------------#
+  def to_move(%Board{ to_move: to_move, capture_moves: capture_moves}), do: {to_move, capture_moves}
+
   def update_to_move( board = %Board{ to_move: :black  } ), do: %Board{ board | to_move: :red   }
   def update_to_move( board = %Board{ to_move: :red    } ), do: %Board{ board | to_move: :black }
 
@@ -119,16 +121,18 @@ defmodule Board do
     |> Piece.valid_move()
   end
   def valid_move(_, {x, y}, {x2, y2}) when not (in_range(x, y) and in_range(x2, y2)), do: false
-  def valid_move(board = %Board{to_move: to_move, capture_moves: capture_moves}, pos = {_x, _y}, end_pos = {_x2, _y2}) do
+  def valid_move(board = %Board{to_move: to_move, capture_moves: nil}, pos = {_x, _y}, end_pos = {_x2, _y2}) do
     piece = get_piece(board, pos)
     captures = get_captures(board, color: to_move)
     moves = get_moves(board, piece: piece)
     cond do
       not v_to_move(board, piece) -> false
-      capture_moves != nil  ->  in_move_list(capture_moves, pos, end_pos)
       captures      != []   ->  in_move_list(captures, pos, end_pos)
       moves         != []   ->  in_move_list(moves, pos, end_pos)
     end
+  end
+  def valid_move(%Board{capture_moves: capture_moves}, pos = {_x, _y}, end_pos = {_x2, _y2}) do
+    in_move_list(capture_moves, pos, end_pos)
   end
 
 
