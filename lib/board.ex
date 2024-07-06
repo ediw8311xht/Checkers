@@ -129,6 +129,7 @@ defmodule Board do
       not v_to_move(board, piece) -> false
       captures      != []   ->  in_move_list(captures, pos, end_pos)
       moves         != []   ->  in_move_list(moves, pos, end_pos)
+      true                  -> false
     end
   end
   def valid_move(%Board{capture_moves: capture_moves}, pos = {_x, _y}, end_pos = {_x2, _y2}) do

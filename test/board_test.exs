@@ -54,6 +54,7 @@ defmodule BoardTest do
 
   test "Board.internal_move/2" do
     board = Board.new()
+    assert board.to_move == :black
     board = Board.internal_move(board, [{4, 4}, {3, 3}])
     assert Board.get_piece(board, {3, 3}) == %Piece{color: :empty, type: :empty, pos: {3, 3}}
     assert Board.get_piece(board, {4, 4}) == %Piece{color: :black, type: :normal, pos: {4, 4}}
@@ -65,6 +66,7 @@ defmodule BoardTest do
     {:valid_move, board} = Board.move(board, {3, 3}, {4, 4})
     assert Board.get_piece(board, {3, 3}) == %Piece{color: :empty, type: :empty, pos: {3, 3}}
     assert Board.get_piece(board, {4, 4}) == %Piece{color: :black, type: :normal, pos: {4, 4}}
+    assert board.to_move == :red
   end
 
   test "Board.empty_pieces" do
@@ -75,7 +77,12 @@ defmodule BoardTest do
 
   test "Capture" do
     board = Board.new()
-    #board.internal
+    {:invalid_move, ^board} = Board.move(board, {2, 2}, {3, 3})
+    {:valid_move,    board} = Board.move(board, {3, 3}, {4, 4})
+    {:invalid_move, ^board} = Board.move(board, {3, 3}, {4, 4})
+    {:invalid_move, ^board} = Board.move(board, {4, 4}, {5, 5})
+    {:invalid_move, ^board} = Board.move(board, {2, 2}, {3, 3})
+    #{:valid_move,    board} = Board.move(board, {3, 3}, {4, 4})
   end
 
 end
