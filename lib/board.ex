@@ -2,7 +2,7 @@
 defmodule Board do
   import Generator
 
-  defstruct pieces: %{}, to_move: :nil, last_move: :nil
+  defstruct pieces: %{}, to_move: :nil, capture_move: :nil
 
   @default_red   [{2, 6}, {4, 6}, {6, 6}, {8, 6}, {1, 7}, {3, 7}, {5, 7}, {7, 7}, {2, 8}, {4, 8}, {6, 8}, {8, 8}]
   @default_black [{1, 1}, {3, 1}, {5, 1}, {7, 1}, {2, 2}, {4, 2}, {6, 2}, {8, 2}, {1, 3}, {3, 3}, {5, 3}, {7, 3}]
@@ -21,8 +21,15 @@ defmodule Board do
   def new(pieces: pieces, to_move: to_move), do: %Board{pieces: pieces, to_move: to_move}
 
   #------------------UTILITY-----------------#
-  def update_to_move( board = %Board{ to_move: :black } ), do: %Board{ board | to_move: :red   }
-  def update_to_move( board = %Board{ to_move: :red   } ), do: %Board{ board | to_move: :black }
+  def update_to_move( board = %Board{ to_move: :black  } ), do: %Board{ board | to_move: :red   }
+  def update_to_move( board = %Board{ to_move: :red    } ), do: %Board{ board | to_move: :black }
+
+  def update_to_move_capture( board = %Board{},  piece: piece = %Piece{}) do
+    case get_captures(board, piece) do
+      [] -> update_to_move(board)
+      l  -> %{ board | capture_move: l }
+    end
+  end
 
   def get_piece(%Board{pieces: pieces}, pos = {_x, _y}), do: pieces[pos]
   def get_pieces(%Board{pieces: pieces}, row: row) do
@@ -80,10 +87,18 @@ defmodule Board do
     end
   end
 
-  def internal_move(board = %Board{}, [head | tail]) do
-    new_piece = get_piece(board, List.last(tail)) |> Piece.update(pos: head)
+  def internal_move(board = %Board{}, [p3, p1]) do
+    new_piece = get_piece(board, p1) |> Piece.update(pos: p3)
     insert_piece(board, piece: new_piece)
-    |> empty_pieces(tail)
+    |> empty_pieces([p1])
+    |> update_to_move()
+  end
+
+  def internal_move(board = %Board{}, [p3, p2, p1]) do
+    new_piece = get_piece(board, p1) |> Piece.update(pos: p3)
+    insert_piece(board, piece: new_piece)
+    |> empty_pieces([p2, p1])
+    |> update_to_move_capture(new_piece)
   end
 
   def move(board = %Board{}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
