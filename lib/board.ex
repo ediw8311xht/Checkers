@@ -127,7 +127,7 @@ defmodule Board do
     Enum.map(pos_list, &(get_piece(board, &1)))
     |> Piece.valid_move()
   end
-  def valid_move(_, {x, y}, {x2, y2}) when not (in_range(x, y) and in_range(x2, y2)), do: false
+  def valid_move(_, {x, y}, {x2, y2}) when not in_range(x, y, x2, y2), do: false
   def valid_move(board = %Board{to_move: to_move, capture_moves: nil}, pos = {_x, _y}, end_pos = {_x2, _y2}) do
     piece    = get_piece(board, pos)
     captures = get_captures(board, color: to_move)

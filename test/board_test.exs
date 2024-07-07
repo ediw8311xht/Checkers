@@ -94,8 +94,6 @@ defmodule BoardTest do
 
     {:valid_move,    board} = Board.move(board, {3, 5}, {2, 4})
     {:valid_move,    board} = Board.move(board, {3, 3}, {1, 5})
-    IO.inspect(Board.get_piece(board, {3, 3}))
-    IO.puts(board)
   end
 
 end
