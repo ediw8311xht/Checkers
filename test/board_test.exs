@@ -78,11 +78,24 @@ defmodule BoardTest do
   test "Capture" do
     board = Board.new()
     {:invalid_move, ^board} = Board.move(board, {2, 2}, {3, 3})
+
     {:valid_move,    board} = Board.move(board, {3, 3}, {4, 4})
+
     {:invalid_move, ^board} = Board.move(board, {3, 3}, {4, 4})
     {:invalid_move, ^board} = Board.move(board, {4, 4}, {5, 5})
     {:invalid_move, ^board} = Board.move(board, {2, 2}, {3, 3})
-    #{:valid_move,    board} = Board.move(board, {3, 3}, {4, 4})
+
+    {:valid_move,    board} = Board.move(board, {4, 6}, {3, 5})
+    {:valid_move,    board} = Board.move(board, {2, 2}, {3, 3})
+
+    {:invalid_move, ^board} = Board.move(board, {3, 5}, {4, 4})
+    {:invalid_move, ^board} = Board.move(board, {3, 5}, {5, 3})
+    {:invalid_move, ^board} = Board.move(board, {1, 1}, {2, 2})
+
+    {:valid_move,    board} = Board.move(board, {3, 5}, {2, 4})
+    {:valid_move,    board} = Board.move(board, {3, 3}, {1, 5})
+    IO.inspect(Board.get_piece(board, {3, 3}))
+    IO.puts(board)
   end
 
 end

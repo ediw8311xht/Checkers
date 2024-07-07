@@ -27,7 +27,7 @@ defmodule Board do
   def update_to_move( board = %Board{ to_move: :red    } ), do: %Board{ board | to_move: :black }
 
   def update_to_move_capture( board = %Board{},  piece: piece = %Piece{}) do
-    case get_captures(board, piece) do
+    case get_captures(board, piece: piece) do
       [] -> %Board{ update_to_move(board) | capture_moves: nil }
       l  -> %Board{ board | capture_moves: l }
     end
@@ -70,8 +70,12 @@ defmodule Board do
 
   def get_captures(board = %Board{}, color: color) do
     get_pieces(board, color: color)
-    |> Stream.map(fn piece -> get_captures(board, piece: piece) end)
-    |> Enum.filter(fn captures -> captures != [] end)
+    |> Enum.reduce([], fn piece, acc ->
+      case get_captures(board, piece: piece) do
+        []       -> acc
+        captures -> acc ++ captures
+      end
+    end)
   end
 
   def get_moves(board = %Board{}, piece: piece = %Piece{}) do
@@ -100,7 +104,7 @@ defmodule Board do
     new_piece = get_piece(board, p1) |> Piece.update(pos: p3)
     insert_piece(board, piece: new_piece)
     |> empty_pieces([p2, p1])
-    |> update_to_move_capture(new_piece)
+    |> update_to_move_capture(piece: new_piece)
   end
 
   def move(board = %Board{}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
@@ -112,6 +116,9 @@ defmodule Board do
 
   #------------------VALIDATION--------------#
   def in_move_list(move_list, pos = {_x, _y}, end_pos = {_x2, _y2}) do
+    if pos == {3, 3} and end_pos == {1, 5} do
+      IO.inspect(move_list)
+    end
     Enum.find(move_list, false, fn l -> List.first(l) == end_pos and List.last(l) == pos end)
   end
 
@@ -122,13 +129,15 @@ defmodule Board do
   end
   def valid_move(_, {x, y}, {x2, y2}) when not (in_range(x, y) and in_range(x2, y2)), do: false
   def valid_move(board = %Board{to_move: to_move, capture_moves: nil}, pos = {_x, _y}, end_pos = {_x2, _y2}) do
-    piece = get_piece(board, pos)
+    piece    = get_piece(board, pos)
     captures = get_captures(board, color: to_move)
-    moves = get_moves(board, piece: piece)
+    moves    = get_moves(board, piece: piece)
     cond do
       not v_to_move(board, piece) -> false
       captures      != []   ->  in_move_list(captures, pos, end_pos)
-      moves         != []   ->  in_move_list(moves, pos, end_pos)
+      moves         != []   ->  
+        IO.puts("HERE")
+        in_move_list(moves, pos, end_pos)
       true                  -> false
     end
   end
