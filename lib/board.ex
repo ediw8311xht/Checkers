@@ -116,9 +116,6 @@ defmodule Board do
 
   #------------------VALIDATION--------------#
   def in_move_list(move_list, pos = {_x, _y}, end_pos = {_x2, _y2}) do
-    if pos == {3, 3} and end_pos == {1, 5} do
-      IO.inspect(move_list)
-    end
     Enum.find(move_list, false, fn l -> List.first(l) == end_pos and List.last(l) == pos end)
   end
 
@@ -135,9 +132,7 @@ defmodule Board do
     cond do
       not v_to_move(board, piece) -> false
       captures      != []   ->  in_move_list(captures, pos, end_pos)
-      moves         != []   ->  
-        IO.puts("HERE")
-        in_move_list(moves, pos, end_pos)
+      moves         != []   ->  in_move_list(moves, pos, end_pos)
       true                  -> false
     end
   end
