@@ -30,11 +30,11 @@ defmodule Board do
 
   @spec game_over(t()) :: game_result()
   def game_over(board = %Board{}) do
-    case (for c <- [:black, :red], do: has_kv_pieces(board, :color, c)) do
-      [ true  , true  ] -> nil
-      [ true  , false ] -> :black
-      [ false , true  ] -> :red
-      [ false , false ] -> :draw
+    case { has_kv_pieces(board, :color, :black), has_kv_pieces(board, :color, :red) } do
+      { true  , true  } -> nil
+      { true  , false } -> :black
+      { false , true  } -> :red
+      { false , false } -> :draw
     end
   end
 
