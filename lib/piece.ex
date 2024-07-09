@@ -3,10 +3,14 @@ defmodule Piece do
   import Generator
   defstruct color: :empty, type: :empty, pos: :nil
 
+  @type color :: :black  | :red   | :empty
+  @type type  :: :normal | :king  | :empty
+  @type pos   :: {1..8, 1..8}
+  @type t     :: %__MODULE__{color: color, type: type, pos: pos}
+
   defmacro p({color, pos={_x,_y}}),       do: quote do: %Piece{color: unquote(color), pos: unquote(pos)}
   defmacro p({color, type}),              do: quote do: %Piece{color: unquote(color), type: unquote(type)}
   defmacro p({color, type, pos={_x,_y}}), do: quote do: %Piece{color: unquote(color), type: unquote(type), pos: unquote(pos)}
-
 
   @opposite %{red: :black, black: :red, empty: :empty}
   @points for y <- 1..8, x <- 1..8, into: [], do: {x, y}
@@ -17,14 +21,16 @@ defmodule Piece do
     { {:red,    :king   } , "R" , [{1,1},{-1,1},{1,-1},{-1,-1}] ,  [{2,2},{-2,2},{2,-2},{-2,-2}] },
   ]
 
+  @spec king_me(t()) :: t
   def king_me(piece = %Piece{color: :black, type: :normal, pos: {_x, 8}}), do: %{piece | type: :king}
   def king_me(piece = %Piece{color: :red  , type: :normal, pos: {_x, 1}}), do: %{piece | type: :king}
   def king_me(piece = %Piece{}), do: piece
 
+  @spec new(pos()) :: t
   def new(pos = {_x, _y}), do: %Piece{color: :empty, type: :empty, pos: pos}
+
+  @spec new(color: color(), type: type(), pos: pos()) :: t
   def new(color: color, type: type, pos: pos), do: %Piece{color: color, type: type, pos: pos}
-
-
 
   def update(piece = %Piece{}, pos: pos), do: %Piece{piece | pos: pos} |> king_me()
   for type <- [:color, :type] do

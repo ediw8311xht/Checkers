@@ -4,6 +4,12 @@ defmodule Board do
 
   defstruct pieces: %{}, to_move: :black, capture_moves: nil
 
+  @typedoc "Board data type for Checkers game"
+
+  @type to_moves :: :black | :red
+  @type t :: %__MODULE__{pieces: map(), to_move: to_moves(), capture_moves: list(Piece.pos()) | nil}
+
+
   @default_red   [{2, 6}, {4, 6}, {6, 6}, {8, 6}, {1, 7}, {3, 7}, {5, 7}, {7, 7}, {2, 8}, {4, 8}, {6, 8}, {8, 8}]
   @default_black [{1, 1}, {3, 1}, {5, 1}, {7, 1}, {2, 2}, {4, 2}, {6, 2}, {8, 2}, {1, 3}, {3, 3}, {5, 3}, {7, 3}]
   @default_to_move  :black
@@ -17,11 +23,24 @@ defmodule Board do
     end
   )
 
+  @spec new() :: t()
   def new(), do: new(pieces: @default_pieces, to_move: @default_to_move)
+
+  @spec new(pieces: map(), to_move: atom()) :: t()
   def new(pieces: pieces, to_move: to_move), do: %Board{pieces: pieces, to_move: to_move}
 
   #------------------UTILITY-----------------#
+  @spec to_move(t) :: {atom(), list()}
   def to_move(%Board{ to_move: to_move, capture_moves: capture_moves}), do: {to_move, capture_moves}
+
+  def game_over(%Board{pieces: pieces}) do
+    Enum.reduce_while(pieces, %{black:  nil, red: nil, empty: nil}, fn piece, acc ->
+      case Map.replace(acc, piece.color, true) do
+        acc = %{black: true, red: true, empty: _} -> {:halt, acc}
+        acc = _ -> {:continue, acc}
+      end
+    end)
+  end
 
   def update_to_move( board = %Board{ to_move: :black  } ), do: %Board{ board | to_move: :red   }
   def update_to_move( board = %Board{ to_move: :red    } ), do: %Board{ board | to_move: :black }
@@ -50,10 +69,12 @@ defmodule Board do
     update_pieces(board, new_pieces: %{piece.pos => piece})
   end
 
+  @spec update_pieces(t(), new_pieces: %{optional(Piece.pos()) => Piece.t}) :: t()
   def update_pieces(board = %Board{pieces: pieces}, new_pieces: new_pieces = %{}) do
     %Board{ board | pieces: Map.merge(pieces, new_pieces) }
   end
 
+  @spec empty_pieces(t(), [Piece.pos()]) :: t()
   def empty_pieces(board = %Board{pieces: pieces}, positions) do
     %Board{ board | pieces:
       Enum.reduce(positions, pieces, fn pos, acc ->
@@ -136,11 +157,10 @@ defmodule Board do
       true                  -> false
     end
   end
+
   def valid_move(%Board{capture_moves: capture_moves}, pos = {_x, _y}, end_pos = {_x2, _y2}) do
     in_move_list(capture_moves, pos, end_pos)
   end
-
-
   #------------------STRING------------------#
   @doc"""
     string(%Board{}, row: row, column: column) ->

@@ -69,13 +69,40 @@ defmodule BoardTest do
     assert board.to_move == :red
   end
 
-  test "Board.empty_pieces" do
+  test "Board.empty_pieces/2" do
     board = Board.new()
     board = Board.empty_pieces(board, [{3, 3}])
     assert Board.get_piece(board, {3, 3}) == %Piece{color: :empty, type: :empty, pos: {3, 3}}
   end
 
   test "Capture" do
+    board = Board.new()
+    {:invalid_move, ^board} = Board.move(board, {2, 2}, {3, 3})
+
+    {:valid_move,    board} = Board.move(board, {3, 3}, {4, 4})
+
+    {:invalid_move, ^board} = Board.move(board, {3, 3}, {4, 4})
+    {:invalid_move, ^board} = Board.move(board, {4, 4}, {5, 5})
+    {:invalid_move, ^board} = Board.move(board, {2, 2}, {3, 3})
+
+    {:valid_move,    board} = Board.move(board, {4, 6}, {3, 5})
+    {:valid_move,    board} = Board.move(board, {2, 2}, {3, 3})
+
+    {:invalid_move, ^board} = Board.move(board, {3, 5}, {4, 4})
+    {:invalid_move, ^board} = Board.move(board, {3, 5}, {5, 3})
+    {:invalid_move, ^board} = Board.move(board, {1, 1}, {2, 2})
+
+    {:valid_move,    board} = Board.move(board, {3, 5}, {2, 4})
+    {:valid_move,    board} = Board.move(board, {3, 3}, {1, 5})
+    assert board.capture_moves == nil
+  end
+
+  test "game_over/1" do
+    board = Board.new()
+    Board.empty_pieces(board, [])
+  end
+
+  test "Double Capture" do
     board = Board.new()
     {:invalid_move, ^board} = Board.move(board, {2, 2}, {3, 3})
 

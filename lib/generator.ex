@@ -19,7 +19,6 @@ defmodule Generator do
   def add(  {x, y}, {x2, y2}), do: {x + x2, y + y2}
   def minus({x, y}, {x2, y2}), do: {x - x2, y - y2}
 
-
   def from_slope(p={x, y}, s={_sx, _sy}, e={end_x, end_y}, limit \\ 100) do
     cond do
       limit <= 0 -> raise "Limit Reached in from_slope/4"
