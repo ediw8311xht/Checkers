@@ -5,21 +5,20 @@ defmodule Checkers do
 
   @doc """
   """
-  defstruct board: nil, moves: nil
+  defstruct board: nil, moves: nil, game_over: nil
 
   def new() do
-    %Checkers{board: Board.new(), moves: []}
+    %__MODULE__{board: Board.new(), moves: [], game_over: nil}
   end
 
   def start_game(), do: new() |> start_game()
-  def start_game(game = %Checkers{}), do: game
+  def start_game(game = %__MODULE__{}), do: game
 
-  def game_over(%Checkers{board: board}) do
-    case { Board.get_pieces(board, color: :black), Board.get_pieces(board, color: :red) } do
-      { []     ,  []   } -> :draw
-      { _black ,  []   } -> :black
-      { []     ,  _red } -> :red
-      { _black ,  _red } -> nil
+  def update_game_over(game = %__MODULE__{board: board, game_over: game_over}) do
+    case game_over do
+      nil -> %__MODULE__{game | game_over: Board.game_over(board)}
+      _   -> game
     end
   end
+
 end

@@ -102,7 +102,7 @@ defmodule BoardTest do
     Board.empty_pieces(board, [])
   end
 
-  test "Double Capture" do
+  test "Multi Capture" do
     board = Board.new()
     {:invalid_move, ^board} = Board.move(board, {2, 2}, {3, 3})
 

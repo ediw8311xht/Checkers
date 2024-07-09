@@ -36,5 +36,9 @@ defmodule Generator do
     Stream.map(directions, &(from_direction(pos, &1)))
     |> Enum.filter(&(&1))
   end
+
+  def gen_pieces(opts \\ [color: :empty, type: :empty], positions) do
+    for pos <- positions, into: %{}, do: {pos, Piece.new(opts ++ [pos: pos])}
+  end
 end
 

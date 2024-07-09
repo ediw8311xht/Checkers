@@ -6,22 +6,14 @@ defmodule Board do
 
   @typedoc "Board data type for Checkers game"
 
-  @type to_moves :: :black | :red
-  @type t :: %__MODULE__{pieces: map(), to_move: to_moves(), capture_moves: list(Piece.pos()) | nil}
+  @type game_result :: :black | :red | :draw | nil
+  @type t :: %__MODULE__{pieces: map(), to_move: :black | :red, capture_moves: list(Piece.pos()) | nil}
 
-
-  @default_red   [{2, 6}, {4, 6}, {6, 6}, {8, 6}, {1, 7}, {3, 7}, {5, 7}, {7, 7}, {2, 8}, {4, 8}, {6, 8}, {8, 8}]
-  @default_black [{1, 1}, {3, 1}, {5, 1}, {7, 1}, {2, 2}, {4, 2}, {6, 2}, {8, 2}, {1, 3}, {3, 3}, {5, 3}, {7, 3}]
+  @empty_board      ( for x <- 1..8, y <- 1..8, do: {x, y} ) |> gen_pieces()
+  @default_red      gen_pieces(  [color: :red   , type: :normal], [{2, 6}, {4, 6}, {6, 6}, {8, 6}, {1, 7}, {3, 7}, {5, 7}, {7, 7}, {2, 8}, {4, 8}, {6, 8}, {8, 8}]  )
+  @default_black    gen_pieces(  [color: :black , type: :normal], [{1, 1}, {3, 1}, {5, 1}, {7, 1}, {2, 2}, {4, 2}, {6, 2}, {8, 2}, {1, 3}, {3, 3}, {5, 3}, {7, 3}]  )
+  @default_pieces   Map.merge(@empty_board, Map.merge(@default_red, @default_black))
   @default_to_move  :black
-  @default_pieces (
-    for y <- 1..8, x <- 1..8, into: %{} do
-      cond do
-        {x, y} in @default_red   -> {{x, y}, Piece.new(color: :red  , type: :normal, pos: {x, y})}
-        {x, y} in @default_black -> {{x, y}, Piece.new(color: :black, type: :normal, pos: {x, y})}
-        true                     -> {{x, y}, Piece.new({x, y})}
-      end
-    end
-  )
 
   @spec new() :: t()
   def new(), do: new(pieces: @default_pieces, to_move: @default_to_move)
@@ -30,16 +22,20 @@ defmodule Board do
   def new(pieces: pieces, to_move: to_move), do: %Board{pieces: pieces, to_move: to_move}
 
   #------------------UTILITY-----------------#
-  @spec to_move(t) :: {atom(), list()}
+  @spec to_move(t()) :: {atom(), list()}
   def to_move(%Board{ to_move: to_move, capture_moves: capture_moves}), do: {to_move, capture_moves}
 
-  def game_over(%Board{pieces: pieces}) do
-    Enum.reduce_while(pieces, %{black:  nil, red: nil, empty: nil}, fn piece, acc ->
-      case Map.replace(acc, piece.color, true) do
-        acc = %{black: true, red: true, empty: _} -> {:halt, acc}
-        acc = _ -> {:continue, acc}
-      end
-    end)
+  @spec has_kv_pieces(t(), atom(), any()) :: boolean()
+  def has_kv_pieces(%Board{pieces: pieces}, key, value), do: Enum.any?(pieces, &(&1[key] == value))
+
+  @spec game_over(t()) :: game_result()
+  def game_over(board = %Board{}) do
+    case (for c <- [:black, :red], do: has_kv_pieces(board, :color, c)) do
+      [ true  , true  ] -> nil
+      [ true  , false ] -> :black
+      [ false , true  ] -> :red
+      [ false , false ] -> :draw
+    end
   end
 
   def update_to_move( board = %Board{ to_move: :black  } ), do: %Board{ board | to_move: :red   }

@@ -26,8 +26,10 @@ defmodule Piece do
   def king_me(piece = %Piece{color: :red  , type: :normal, pos: {_x, 1}}), do: %{piece | type: :king}
   def king_me(piece = %Piece{}), do: piece
 
+
   @spec new(pos()) :: t
   def new(pos = {_x, _y}), do: %Piece{color: :empty, type: :empty, pos: pos}
+  def new(pos: pos), do: new(pos)
 
   @spec new(color: color(), type: type(), pos: pos()) :: t
   def new(color: color, type: type, pos: pos), do: %Piece{color: color, type: type, pos: pos}
