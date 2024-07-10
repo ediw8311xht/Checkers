@@ -21,23 +21,27 @@ defmodule Piece do
     { {:red,    :king   } , "R" , [{1,1},{-1,1},{1,-1},{-1,-1}] ,  [{2,2},{-2,2},{2,-2},{-2,-2}] },
   ]
 
-  @spec king_me(t()) :: t
+  @spec king_me(t()) :: {boolean(), t()}
   def king_me(piece = %Piece{color: :black, type: :normal, pos: {_x, 8}}), do: {true, %{piece | type: :king}}
   def king_me(piece = %Piece{color: :red  , type: :normal, pos: {_x, 1}}), do: {true, %{piece | type: :king}}
   def king_me(piece = %Piece{}), do: {false, piece}
 
 
-  @spec new(pos()) :: t
+  @spec new(pos()) :: t()
   def new(pos = {_x, _y}), do: %Piece{color: :empty, type: :empty, pos: pos}
   def new(pos: pos), do: new(pos)
 
-  @spec new(color: color(), type: type(), pos: pos()) :: t
+  @spec new(color: color(), type: type(), pos: pos()) :: t()
   def new(color: color, type: type, pos: pos), do: %Piece{color: color, type: type, pos: pos}
 
+  @spec update(t(), pos: pos()) :: {boolean(), t()}
   def update(piece = %Piece{}, pos: pos), do: %Piece{piece | pos: pos} |> king_me()
-  for type <- [:color, :type] do
-    def update(piece = %Piece{}, [{unquote(type), g}]), do: %Piece{piece | unquote(type) => g}
-  end
+
+  @spec update(t(), color: color()) :: t()
+  def update(piece = %Piece{}, type: type), do: %Piece{piece | type: type}
+
+  @spec update(t(), type: type()) :: t()
+  def update(piece = %Piece{}, color: color), do: %Piece{piece | color: color}
 
   for {{color, type}, string, moves, captures} <- @table do
     opp_color = @opposite[color]

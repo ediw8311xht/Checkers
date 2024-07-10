@@ -7,7 +7,9 @@ defmodule Board do
   @typedoc "Board data type for Checkers game"
 
   @type game_result :: :black | :red | :draw | nil
-  @type t :: %__MODULE__{pieces: map(), to_move: :black | :red, capture_moves: list(Piece.pos()) | nil}
+  @type to_move     :: :black | :red
+  @type move_list   :: list(list(Piece.pos()))
+  @type t :: %__MODULE__{pieces: map(), to_move: to_move(), capture_moves: move_list() | nil}
 
   @empty_board      ( for x <- 1..8, y <- 1..8, do: {x, y} ) |> gen_pieces()
   @default_red      gen_pieces(  [color: :red   , type: :normal], [{2, 6}, {4, 6}, {6, 6}, {8, 6}, {1, 7}, {3, 7}, {5, 7}, {7, 7}, {2, 8}, {4, 8}, {6, 8}, {8, 8}]  )
@@ -38,9 +40,11 @@ defmodule Board do
     end
   end
 
+  @spec update_to_move(t()) :: t()
   def update_to_move( board = %Board{ to_move: :black  } ), do: %Board{ board | to_move: :red   }
   def update_to_move( board = %Board{ to_move: :red    } ), do: %Board{ board | to_move: :black }
 
+  @spec update_to_move_capture(t(), piece: Piece.t(), was_kinged: boolean()) :: t()
   def update_to_move_capture( board = %Board{},  piece: _piece = %Piece{}, was_kinged: true) do
     %Board{ update_to_move(board) | capture_moves: nil }
   end
