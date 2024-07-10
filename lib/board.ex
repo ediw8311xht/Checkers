@@ -132,6 +132,7 @@ defmodule Board do
     |> update_to_move_capture(piece: new_piece, was_kinged: was_kinged)
   end
 
+  @spec move( t(), Piece.pos(), Piece.pos() ) :: {:invalid_move | :valid_move, t() }
   def move(board = %Board{}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
     case valid_move(board, pos, pos2) do
       false -> {:invalid_move, board}
@@ -145,12 +146,16 @@ defmodule Board do
     Enum.find(move_list, false, fn l -> List.first(l) == end_pos and List.last(l) == pos end)
   end
 
+  @spec v_to_move( t() , Piece.t() ) :: boolean()
   def v_to_move(%Board{to_move: to_move}, %Piece{color: color}), do: to_move == color
-  def v_from_positions(board = %Board{}, pos_list = [_ | _]) do
+
+  @spec v_from_positions( t() , Piece.move() ) :: boolean()
+  def v_from_positions(board = %Board{}, pos_list) do
     Enum.map(pos_list, &(get_piece(board, &1)))
     |> Piece.valid_move()
   end
-  def valid_move(_, {x, y}, {x2, y2}) when not in_range(x, y, x2, y2), do: false
+
+  @spec valid_move( t(), Piece.pos(), Piece.pos() ) :: Piece.move_list() | false
   def valid_move(board = %Board{to_move: to_move, capture_moves: nil}, pos = {_x, _y}, end_pos = {_x2, _y2}) do
     piece    = get_piece(board, pos)
     captures = get_captures(board, color: to_move)
