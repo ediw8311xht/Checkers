@@ -22,9 +22,9 @@ defmodule Piece do
   ]
 
   @spec king_me(t()) :: t
-  def king_me(piece = %Piece{color: :black, type: :normal, pos: {_x, 8}}), do: %{piece | type: :king}
-  def king_me(piece = %Piece{color: :red  , type: :normal, pos: {_x, 1}}), do: %{piece | type: :king}
-  def king_me(piece = %Piece{}), do: piece
+  def king_me(piece = %Piece{color: :black, type: :normal, pos: {_x, 8}}), do: {true, %{piece | type: :king}}
+  def king_me(piece = %Piece{color: :red  , type: :normal, pos: {_x, 1}}), do: {true, %{piece | type: :king}}
+  def king_me(piece = %Piece{}), do: {false, piece}
 
 
   @spec new(pos()) :: t

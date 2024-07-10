@@ -104,24 +104,31 @@ defmodule BoardTest do
 
   test "Multi Capture" do
     board = Board.new()
-    {:invalid_move, ^board} = Board.move(board, {2, 2}, {3, 3})
-
     {:valid_move,    board} = Board.move(board, {3, 3}, {4, 4})
-
-    {:invalid_move, ^board} = Board.move(board, {3, 3}, {4, 4})
-    {:invalid_move, ^board} = Board.move(board, {4, 4}, {5, 5})
-    {:invalid_move, ^board} = Board.move(board, {2, 2}, {3, 3})
-
     {:valid_move,    board} = Board.move(board, {4, 6}, {3, 5})
+
     {:valid_move,    board} = Board.move(board, {2, 2}, {3, 3})
+    {:valid_move,    board} = Board.move(board, {5, 7}, {4, 6})
 
-    {:invalid_move, ^board} = Board.move(board, {3, 5}, {4, 4})
-    {:invalid_move, ^board} = Board.move(board, {3, 5}, {5, 3})
-    {:invalid_move, ^board} = Board.move(board, {1, 1}, {2, 2})
+    {:valid_move,    board} = Board.move(board, {7, 3}, {6, 4})
+    {:valid_move,    board} = Board.move(board, {4, 8}, {5, 7})
 
-    {:valid_move,    board} = Board.move(board, {3, 5}, {2, 4})
-    {:valid_move,    board} = Board.move(board, {3, 3}, {1, 5})
+    {:valid_move,    board} = Board.move(board, {8, 2}, {7, 3})
+    {:valid_move,    board} = Board.move(board, {6, 6}, {7, 5})
+
+    {:valid_move,    board} = Board.move(board, {7, 1}, {8, 2})
+    {:valid_move,    board} = Board.move(board, {2, 6}, {1, 5})
+
+    {:valid_move,    board} = Board.move(board, {4, 4}, {2, 6})
+    assert board.capture_moves == [[{4, 8}, {3, 7}, {2, 6}]]
+    assert board.to_move       == :black
+
+    {:invalid_move,  board} = Board.move(board, {3, 1}, {2, 2})
+
+    {:valid_move,    board} = Board.move(board, {2, 6}, {4, 8})
+    IO.puts(board)
     assert board.capture_moves == nil
+    assert board.to_move       == :red
   end
 
 end

@@ -41,7 +41,10 @@ defmodule Board do
   def update_to_move( board = %Board{ to_move: :black  } ), do: %Board{ board | to_move: :red   }
   def update_to_move( board = %Board{ to_move: :red    } ), do: %Board{ board | to_move: :black }
 
-  def update_to_move_capture( board = %Board{},  piece: piece = %Piece{}) do
+  def update_to_move_capture( board = %Board{},  piece: _piece = %Piece{}, was_kinged: true) do
+    %Board{ update_to_move(board) | capture_moves: nil }
+  end
+  def update_to_move_capture( board = %Board{},  piece: piece = %Piece{}, was_kinged: false) do
     case get_captures(board, piece: piece) do
       [] -> %Board{ update_to_move(board) | capture_moves: nil }
       l  -> %Board{ board | capture_moves: l }
@@ -111,17 +114,17 @@ defmodule Board do
   end
 
   def internal_move(board = %Board{}, [p3, p1]) do
-    new_piece = get_piece(board, p1) |> Piece.update(pos: p3)
+    {_, new_piece} = get_piece(board, p1) |> Piece.update(pos: p3)
     insert_piece(board, piece: new_piece)
     |> empty_pieces([p1])
     |> update_to_move()
   end
 
   def internal_move(board = %Board{}, [p3, p2, p1]) do
-    new_piece = get_piece(board, p1) |> Piece.update(pos: p3)
+    {was_kinged, new_piece} = get_piece(board, p1) |> Piece.update(pos: p3)
     insert_piece(board, piece: new_piece)
     |> empty_pieces([p2, p1])
-    |> update_to_move_capture(piece: new_piece)
+    |> update_to_move_capture(piece: new_piece, was_kinged: was_kinged)
   end
 
   def move(board = %Board{}, pos = {_x, _y}, pos2 = {_x2, _y2}) do
