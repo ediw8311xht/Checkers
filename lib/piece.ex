@@ -3,10 +3,12 @@ defmodule Piece do
   import Generator
   defstruct color: :empty, type: :empty, pos: :nil
 
-  @type color :: :black  | :red   | :empty
-  @type type  :: :normal | :king  | :empty
-  @type pos   :: {1..8, 1..8}
-  @type t     :: %__MODULE__{color: color, type: type, pos: pos}
+  @type color     :: :black  | :red   | :empty
+  @type type      :: :normal | :king  | :empty
+  @type pos       :: {1..8, 1..8}
+  @type move      :: list(Piece.pos())
+  @type move_list :: list(move())
+  @type t         :: %__MODULE__{color: color, type: type, pos: pos}
 
   defmacro p({color, pos={_x,_y}}),       do: quote do: %Piece{color: unquote(color), pos: unquote(pos)}
   defmacro p({color, type}),              do: quote do: %Piece{color: unquote(color), type: unquote(type)}
@@ -26,7 +28,6 @@ defmodule Piece do
   def king_me(piece = %Piece{color: :red  , type: :normal, pos: {_x, 1}}), do: {true, %{piece | type: :king}}
   def king_me(piece = %Piece{}), do: {false, piece}
 
-
   @spec new(pos()) :: t()
   def new(pos = {_x, _y}), do: %Piece{color: :empty, type: :empty, pos: pos}
   def new(pos: pos), do: new(pos)
@@ -43,6 +44,10 @@ defmodule Piece do
   @spec update(t(), type: type()) :: t()
   def update(piece = %Piece{}, color: color), do: %Piece{piece | color: color}
 
+  @spec valid_move( list( t() ) ) :: boolean()
+  @spec list_moves(       t()   ) :: move_list()
+  @spec list_captures(    t()   ) :: move_list()
+  @spec string( t() )             :: String.t()
   for {{color, type}, string, moves, captures} <- @table do
     opp_color = @opposite[color]
     for point <- @points do

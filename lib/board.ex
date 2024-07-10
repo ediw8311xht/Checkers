@@ -8,8 +8,7 @@ defmodule Board do
 
   @type game_result :: :black | :red | :draw | nil
   @type to_move     :: :black | :red
-  @type move_list   :: list(list(Piece.pos()))
-  @type t :: %__MODULE__{pieces: map(), to_move: to_move(), capture_moves: move_list() | nil}
+  @type t           :: %__MODULE__{pieces: map(), to_move: to_move(), capture_moves: Piece.move_list() | nil}
 
   @empty_board      ( for x <- 1..8, y <- 1..8, do: {x, y} ) |> gen_pieces()
   @default_red      gen_pieces(  [color: :red   , type: :normal], [{2, 6}, {4, 6}, {6, 6}, {8, 6}, {1, 7}, {3, 7}, {5, 7}, {7, 7}, {2, 8}, {4, 8}, {6, 8}, {8, 8}]  )
@@ -87,11 +86,13 @@ defmodule Board do
   end
 
   #------------------CAPTURES----------------#
+  @spec get_captures(t(), piece: Piece.t()) :: Piece.move_list()
   def get_captures(board = %Board{}, piece: piece = %Piece{}) do
     Piece.list_captures(piece)
     |> Enum.filter(&(v_from_positions(board, &1)))
   end
 
+  @spec get_captures(t(), color: Piece.color()) :: Piece.move_list()
   def get_captures(board = %Board{}, color: color) do
     get_pieces(board, color: color)
     |> Enum.reduce([], fn piece, acc ->
@@ -139,6 +140,7 @@ defmodule Board do
   end
 
   #------------------VALIDATION--------------#
+  @spec in_move_list(Piece.move_list(), Piece.pos(), Piece.pos()) :: Piece.move() | false
   def in_move_list(move_list, pos = {_x, _y}, end_pos = {_x2, _y2}) do
     Enum.find(move_list, false, fn l -> List.first(l) == end_pos and List.last(l) == pos end)
   end
@@ -161,6 +163,7 @@ defmodule Board do
     end
   end
 
+  @spec valid_move(t(), Piece.pos(), Piece.pos()) :: Piece.move() | false
   def valid_move(%Board{capture_moves: capture_moves}, pos = {_x, _y}, end_pos = {_x2, _y2}) do
     in_move_list(capture_moves, pos, end_pos)
   end
